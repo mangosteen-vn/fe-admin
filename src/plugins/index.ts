@@ -3,6 +3,7 @@ import vuetify from '@/plugins/vuetify'
 import { loadFonts } from '@/plugins/webfontloader'
 import '@/plugins/axios'
 import '@/plugins/bootstrap'
+import '@/plugins/toast'
 
 /**
  * plugins/index.ts

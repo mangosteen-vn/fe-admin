@@ -70,10 +70,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-
+import { useToast } from 'vue-toastification'
 import apiClient from '@/plugins/axios'
 // Logo
 import logo from '../assets/logo.svg'
+
+const toast = useToast()
 
 export default defineComponent({
   name: 'HelloWorld',
@@ -131,6 +133,7 @@ export default defineComponent({
   },
   created() {
     apiClient.post('api/profile')
+    toast.success('Config Successfully')
   }
 })
 </script>
