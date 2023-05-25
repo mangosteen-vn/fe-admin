@@ -1,9 +1,9 @@
-import {defineStore} from "pinia";
-import {reactive} from "vue";
+import { defineStore } from 'pinia'
+import { reactive } from 'vue'
 
-export const useAuthenticationStore = defineStore('authentication', () =>{
-    const user = reactive({})
-    return{
-        user
-    }
+export const useAuthenticationStore = defineStore('authentication', () => {
+  const user = reactive({})
+  return {
+    user
+  }
 })
