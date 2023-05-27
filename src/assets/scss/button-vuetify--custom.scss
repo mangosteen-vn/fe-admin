@@ -1,0 +1,13 @@
+.sign-in__method {
+  .v-btn {
+    height: 38px;
+    border-color: #d9d9d9;
+
+    .v-btn__content {
+      text-transform: none;
+      color: var(--bs-black);
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+}

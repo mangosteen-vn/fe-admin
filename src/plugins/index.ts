@@ -4,6 +4,7 @@ import { loadFonts } from '@/plugins/webfontloader'
 import '@/plugins/axios'
 import '@/plugins/bootstrap'
 import '@/plugins/toast'
+import firebase from '@/plugins/firebase'
 
 /**
  * plugins/index.ts
@@ -12,5 +13,6 @@ import '@/plugins/toast'
  */
 export function registerPlugins(app: App) {
   app.use(vuetify)
+  app.use(firebase)
   loadFonts()
 }

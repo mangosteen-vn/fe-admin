@@ -74,6 +74,7 @@ import { useToast } from 'vue-toastification'
 import apiClient from '@/plugins/axios'
 // Logo
 import logo from '../assets/logo.svg'
+import { fetchUserProfile } from '@/utils/authentication'
 
 const toast = useToast()
 
@@ -132,8 +133,7 @@ export default defineComponent({
     }
   },
   created() {
-    apiClient.post('api/profile')
-    toast.success('Config Successfully')
+    fetchUserProfile()
   }
 })
 </script>
