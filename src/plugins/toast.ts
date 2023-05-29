@@ -1,3 +1,8 @@
+/**
+ * plugins/toast.ts
+ *
+ * Framework documentation: https://github.com/Maronato/vue-toastification`
+ */
 import { createApp } from 'vue'
 // @ts-ignore
 import Toast, { PluginOptions, TYPE } from 'vue-toastification'

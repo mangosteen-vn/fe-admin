@@ -1,13 +1,28 @@
 .sign-in__method {
   .v-btn {
+    color: var(--purple-accent-1);
     height: 38px;
-    border-color: #d9d9d9;
-
-    .v-btn__content {
-      text-transform: none;
+    border-color: var(--blue-grey-lighten-4);
+    &__content {
       color: var(--bs-black);
       font-size: 16px;
       font-weight: 600;
     }
+    &__loader {
+      color: var(--purple-accent-3);
+    }
   }
+}
+.btn-primary--flat {
+  .v-btn {
+    height: 38px;
+    &__content {
+      font-size: 16px;
+    }
+  }
+}
+
+// Reset
+.v-btn {
+  letter-spacing: normal;
 }

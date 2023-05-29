@@ -5,7 +5,6 @@ import '@/plugins/axios'
 import '@/plugins/bootstrap'
 import '@/plugins/toast'
 import firebase from '@/plugins/firebase'
-
 /**
  * plugins/index.ts
  *

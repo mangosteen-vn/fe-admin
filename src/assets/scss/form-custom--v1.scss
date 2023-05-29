@@ -1,0 +1,59 @@
+.input-password--v1,
+.input-email--v1 {
+  position: relative;
+  .input__control {
+    padding-left: 46px;
+    padding-right: 16px;
+    box-shadow: none !important;
+    font-weight: 500;
+    border-color: var(--blue-grey-lighten-3);
+    border-radius: 8px;
+
+    &::placeholder {
+      color: var(--blue-grey-lighten-3);
+    }
+
+    &:focus {
+      border-color: var(--purple-accent-4);
+      color: var(--purple-accent-4);
+      caret-color: var(--purple-accent-4);
+
+      ~ .icon-password,
+      ~ .icon-user {
+        fill: var(--purple-accent-4);
+        transition: 0.4s;
+      }
+    }
+  }
+  .icon-password,
+  .icon-user {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 16px;
+    transition: 0.4s;
+    fill: var(--blue-grey-lighten-3);
+  }
+}
+.input-password--v1 {
+  .icon-show-password {
+    &::after {
+      content: '';
+      height: 14px;
+      width: 14px;
+      position: absolute;
+      right: 16px;
+      background: url('@/assets/images/eye.svg');
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      transition: 0.4s;
+    }
+    &.show {
+      &::after {
+        background: url('@/assets/images/eye-show.svg');
+        transition: 0.4s;
+      }
+    }
+  }
+}

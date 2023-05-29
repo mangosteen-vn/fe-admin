@@ -1,4 +1,8 @@
-// plugins/axios.ts
+/**
+ * plugins/axios.ts
+ *
+ * Framework documentation: https://axios-http.com/docs/intro`
+ */
 import axios from 'axios'
 
 const apiClient = axios.create({
