@@ -1,9 +1,22 @@
 .input-password--v1,
 .input-email--v1 {
   position: relative;
+  &.has-value {
+    .input__control {
+      border-color: var(--purple-accent-4);
+      color: var(--purple-accent-4);
+      caret-color: var(--purple-accent-4);
+
+      ~ .icon-password,
+      ~ .icon-user {
+        fill: var(--purple-accent-4);
+        transition: 0.4s;
+      }
+    }
+  }
   .input__control {
     padding-left: 46px;
-    padding-right: 16px;
+    padding-right: 34px;
     box-shadow: none !important;
     font-weight: 500;
     border-color: var(--blue-grey-lighten-3);

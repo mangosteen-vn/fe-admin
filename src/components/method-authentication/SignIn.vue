@@ -4,11 +4,9 @@ import { useAuthenticationStore } from '@/stores/authentication'
 
 const authenticationStore = useAuthenticationStore()
 
-const formAction = reactive({
-  email: '',
-  password: '',
-  showPassword: false
-})
+const email = ref('')
+const password = ref('')
+const showPassword = ref(false)
 const googleLoading = ref(false)
 const facebookLoading = ref(false)
 const accountLoading = ref(false)
@@ -50,6 +48,19 @@ function signInWithFacebook() {
       googleDisable.value = false
       accountDisable.value = false
     })
+}
+
+async function signInWithEmailAndPassword() {
+  accountLoading.value = true
+  try {
+    await authenticationStore.signInWithEmailAndPassword(email.value, password.value)
+    email.value = ''
+    password.value = ''
+    accountLoading.value = false
+  } catch (error) {
+    accountLoading.value = false
+    console.error(error)
+  }
 }
 </script>
 
@@ -98,9 +109,18 @@ function signInWithFacebook() {
         <div class="sign-in__line__element fw-medium">Or</div>
       </div>
       <div class="sign-in__form">
-        <form action="">
-          <div class="form__input input-email input-email--v1">
-            <input class="form-control input__control" placeholder="Uname@gmail.com" type="email" />
+        <form @submit.prevent="signInWithEmailAndPassword">
+          <div
+            :class="{ 'has-value': email !== '' }"
+            class="form__input input-email input-email--v1"
+          >
+            <input
+              v-model="email"
+              class="form-control input__control"
+              placeholder="Uname@gmail.com"
+              type="email"
+              required
+            />
             <svg
               class="icon-user"
               height="18"
@@ -125,8 +145,17 @@ function signInWithFacebook() {
               </g>
             </svg>
           </div>
-          <div class="form__input input-password input-password--v1">
-            <input class="form-control input__control" placeholder="Password" type="password" />
+          <div
+            :class="{ 'has-value': password !== '' }"
+            class="form__input input-password input-password--v1"
+          >
+            <input
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              class="form-control input__control"
+              placeholder="Password"
+              required
+            />
             <svg
               class="icon-password"
               height="18"
@@ -159,7 +188,11 @@ function signInWithFacebook() {
                 ></path>
               </g>
             </svg>
-            <span class="icon-show-password show"></span>
+            <span
+              :class="{ show: showPassword }"
+              class="icon-show-password"
+              @click="showPassword = !showPassword"
+            ></span>
           </div>
           <div class="form__forgot text-end mt-2">
             <router-link class="fs-7 fw-semibold text-purple-accent-4" to="/forgot-password"
@@ -168,14 +201,15 @@ function signInWithFacebook() {
           </div>
           <div class="form__btn btn-primary--flat mt-3">
             <v-btn
+              :disabled="accountDisable"
+              :loading="accountLoading"
               block
               class="text-none"
               color="purple-accent-4"
               prepend-icon
               rounded="lg"
+              type="submit"
               variant="flat"
-              :loading="accountLoading"
-              :disabled="accountDisable"
             >
               Sign in with Your Account
             </v-btn>
@@ -184,7 +218,7 @@ function signInWithFacebook() {
       </div>
       <div class="sign-in__register mt-4 text-center fw-medium text-blue-grey-lighten-2 fs-7">
         Don't have account?
-        <router-link to="/sign-up" class="fw-semibold text-blue-grey-darken-4">Sign Up</router-link>
+        <router-link class="fw-semibold text-blue-grey-darken-4" to="/sign-up">Sign Up</router-link>
       </div>
     </div>
   </div>
@@ -202,8 +236,10 @@ function signInWithFacebook() {
     background-color: var(--bs-body-bg);
     border-radius: 8px;
     width: 364px;
+
     &__register {
       line-height: 18px;
+
       a {
         transition: 0.4s;
 

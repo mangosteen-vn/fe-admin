@@ -18,11 +18,9 @@ export async function fetchUserProfile(): Promise<User | null> {
     return null
   }
 }
-
-export async function sendDataToServer(userProfile: InputUserProfile): Promise<ResponseObjectAPI> {
+export async function sendDataToServer(userCredential: any): Promise<ResponseObjectAPI> {
   try {
-    const response = await apiClient.post('login/firebase', userProfile)
-    console.log(response)
+    const response = await apiClient.post('login/firebase', userCredential)
     return response.data
   } catch (error) {
     console.log(error)
