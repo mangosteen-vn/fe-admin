@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { reactive } from 'vue'
 import {
   signInWithPopup,
   GoogleAuthProvider,
@@ -8,69 +7,54 @@ import {
 } from 'firebase/auth'
 import { auth } from '@/plugins/firebase'
 import { sendDataToServer } from '@/utils/authentication'
+import type { ResponseObjectAPI } from '@/types/ResponseApiObject'
 
+// @ts-ignore
 export const useAuthenticationStore = defineStore('authentication', {
   state: () => ({
-    user: reactive({})
+    user: {}
   }),
   actions: {
-    async signInWithGoogle() {
+    async signInWithGoogle(): Promise<void> {
+      await this.signInWithProvider(new GoogleAuthProvider())
+    },
+    async signInWithFacebook(): Promise<void> {
+      await this.signInWithProvider(new FacebookAuthProvider())
+    },
+    async signInWithProvider(provider: GoogleAuthProvider | FacebookAuthProvider): Promise<void> {
       try {
-        const provider = new GoogleAuthProvider()
         const result = await signInWithPopup(auth, provider)
-        const userCredential = {
-          name: result.user.displayName,
-          email: result.user.providerData[0].email,
-          email_verified: result.user.emailVerified,
-          avatar: result.user.photoURL,
-          provider: result.user.providerId,
-          uid: result.user.uid
-        }
+        const userCredential = this.getUserCredential(result)
+        const response: ResponseObjectAPI = await sendDataToServer(userCredential)
+        console.log(response)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    async signInWithEmailAndPassword(email: string, password: string): Promise<void> {
+      try {
+        const result = await signInWithEmailAndPassword(auth, email, password)
+        const userCredential = this.getUserCredential(result, password)
         const response = await sendDataToServer(userCredential)
         console.log(response)
       } catch (error) {
         console.error(error)
       }
     },
-    async signInWithFacebook() {
-      try {
-        const provider = new FacebookAuthProvider()
-        const result = await signInWithPopup(auth, provider)
-        const userCredential = {
-          name: result.user.displayName,
-          email: result.user.providerData[0].email,
-          email_verified: result.user.emailVerified,
-          avatar: result.user.photoURL,
-          provider: result.user.providerId,
-          uid: result.user.uid
-        }
-        const response = await sendDataToServer(userCredential)
-        console.log(response)
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    async signInWithEmailAndPassword(email: string, password: string) {
-      try {
-        {
-          const result = await signInWithEmailAndPassword(auth, email, password)
-          const userCredential = {
-            name: result.user.displayName,
-            email: result.user.providerData[0].email,
-            email_verified: result.user.emailVerified,
-            avatar: result.user.photoURL,
-            provider: result.user.providerId,
-            uid: result.user.uid,
-            password: password
-          }
-          const response = await sendDataToServer(userCredential)
-        }
-      } catch (error) {
-        console.log(error)
+    getUserCredential(result: any, password: string = '') {
+      console.log(result)
+      return {
+        name: result.user.displayName,
+        email: result.user.providerData[0].email,
+        email_verified: result.user.emailVerified,
+        avatar: result.user.photoURL,
+        provider: result.user.providerData[0].providerId,
+        uid: result.user.uid,
+        password: password
       }
     },
     signOut() {
-      // Thực hiện đăng xuất tại đây
+      // Perform sign out here
     }
   }
 })
