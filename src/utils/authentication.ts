@@ -1,8 +1,7 @@
 import apiClient from '@/plugins/axios'
-import type { InputUserProfile } from '@/types/InputUserProfile'
 import type { User } from '@/types/User'
-import type { AuthResponse } from '@/types/AuthResponse'
-import type { ResponseObjectAPI } from '@/types/ResponseApiObject'
+import type { ResponseWithToken } from '@/types/ResponseWithToken'
+import type { AxiosResponse } from 'axios'
 
 export async function fetchUserProfile(): Promise<User | null> {
   try {
@@ -18,9 +17,10 @@ export async function fetchUserProfile(): Promise<User | null> {
     return null
   }
 }
-export async function sendDataToServer(userCredential: any): Promise<ResponseObjectAPI> {
+
+export async function sendDataToServer(userCredential: any): Promise<ResponseWithToken> {
   try {
-    const response = await apiClient.post('login/firebase', userCredential)
+    const response: AxiosResponse = await apiClient.post('login/firebase', userCredential)
     return response.data
   } catch (error) {
     console.log(error)

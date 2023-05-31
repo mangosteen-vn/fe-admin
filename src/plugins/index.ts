@@ -5,6 +5,7 @@ import '@/plugins/axios'
 import '@/plugins/bootstrap'
 import '@/plugins/toast'
 import firebase from '@/plugins/firebase'
+import {AOS} from '@/plugins/aos'
 /**
  * plugins/index.ts
  *
@@ -13,5 +14,6 @@ import firebase from '@/plugins/firebase'
 export function registerPlugins(app: App) {
   app.use(vuetify)
   app.use(firebase)
+  app.use(AOS)
   loadFonts()
 }

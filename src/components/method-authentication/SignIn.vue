@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 
 const authenticationStore = useAuthenticationStore()
@@ -52,13 +52,19 @@ function signInWithFacebook() {
 
 async function signInWithEmailAndPassword() {
   accountLoading.value = true
+  googleDisable.value = true
+  facebookDisable.value = true
   try {
     await authenticationStore.signInWithEmailAndPassword(email.value, password.value)
     email.value = ''
     password.value = ''
     accountLoading.value = false
+    googleDisable.value = false
+    facebookDisable.value = false
   } catch (error) {
     accountLoading.value = false
+    googleDisable.value = false
+    facebookDisable.value = false
     console.error(error)
   }
 }
@@ -66,7 +72,7 @@ async function signInWithEmailAndPassword() {
 
 <template>
   <div class="wrap-component">
-    <div class="sign-in p-5">
+    <div class="sign-in p-5" data-aos="zoom-in">
       <div class="sign-in__title text-center">
         <h5 class="fw-semibold mb-1 text-black">You must Sign In to Join</h5>
         <p class="text-blue-grey-lighten-3 fw-medium mb-0 fs-7">
@@ -118,8 +124,8 @@ async function signInWithEmailAndPassword() {
               v-model="email"
               class="form-control input__control"
               placeholder="Uname@gmail.com"
-              type="email"
               required
+              type="email"
             />
             <svg
               class="icon-user"
@@ -152,6 +158,7 @@ async function signInWithEmailAndPassword() {
             <input
               v-model="password"
               :type="showPassword ? 'text' : 'password'"
+              autocomplete="password"
               class="form-control input__control"
               placeholder="Password"
               required

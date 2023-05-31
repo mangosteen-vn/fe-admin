@@ -21,6 +21,14 @@
     }
   }
 }
+.btn-primary--outlined {
+  .v-btn {
+    height: 38px;
+    &__content {
+      font-size: 16px;
+    }
+  }
+}
 
 // Reset
 .v-btn {

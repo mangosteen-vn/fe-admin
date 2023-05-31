@@ -7,13 +7,14 @@ import {
 } from 'firebase/auth'
 import { auth } from '@/plugins/firebase'
 import { sendDataToServer } from '@/utils/authentication'
-import type { ResponseObjectAPI } from '@/types/ResponseApiObject'
+import type { ResponseWithToken } from '@/types/ResponseWithToken'
 
 // @ts-ignore
 export const useAuthenticationStore = defineStore('authentication', {
   state: () => ({
     user: {}
   }),
+
   actions: {
     async signInWithGoogle(): Promise<void> {
       await this.signInWithProvider(new GoogleAuthProvider())
@@ -25,8 +26,8 @@ export const useAuthenticationStore = defineStore('authentication', {
       try {
         const result = await signInWithPopup(auth, provider)
         const userCredential = this.getUserCredential(result)
-        const response: ResponseObjectAPI = await sendDataToServer(userCredential)
-        console.log(response)
+        const response: ResponseWithToken = await sendDataToServer(userCredential)
+        localStorage.setItem('accessToken', response.accessToken)
       } catch (error) {
         console.error(error)
       }
@@ -35,14 +36,13 @@ export const useAuthenticationStore = defineStore('authentication', {
       try {
         const result = await signInWithEmailAndPassword(auth, email, password)
         const userCredential = this.getUserCredential(result, password)
-        const response = await sendDataToServer(userCredential)
-        console.log(response)
+        const response: ResponseWithToken = await sendDataToServer(userCredential)
+        localStorage.setItem('accessToken', response.accessToken)
       } catch (error) {
         console.error(error)
       }
     },
     getUserCredential(result: any, password: string = '') {
-      console.log(result)
       return {
         name: result.user.displayName,
         email: result.user.providerData[0].email,
@@ -54,7 +54,7 @@ export const useAuthenticationStore = defineStore('authentication', {
       }
     },
     signOut() {
-      // Perform sign out here
+      localStorage.removeItem('accessToken')
     }
   }
 })
