@@ -1,12 +1,35 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useAuthenticationStore } from '@/stores/authentication'
+const authenticationStore = useAuthenticationStore()
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const email = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
 const showPassword = ref(false)
 const showPasswordConfirmation = ref(false)
 const accountLoading = ref(false)
+
+function createUserWithEmailAndPassword() {
+  if (password.value == passwordConfirmation.value) {
+    authenticationStore
+      .createUserWithEmailAndPassword(email.value, password.value)
+      .catch((error) => {
+        if (error.code == 'auth/email-already-in-use') {
+          toast.error('Email already in use')
+          email.value = ''
+          password.value = ''
+          passwordConfirmation.value = ''
+        }
+      })
+  } else {
+    toast.error('Password and Confirm Password does not match')
+    password.value = ''
+    passwordConfirmation.value = ''
+  }
+}
 </script>
 <template>
   <div class="wrap-component">
@@ -15,7 +38,7 @@ const accountLoading = ref(false)
         <h5 class="fw-semibold text-black">Create an Account</h5>
       </div>
       <div class="sign-up__form">
-        <form action="">
+        <form @submit.prevent="createUserWithEmailAndPassword">
           <div
             :class="{ 'has-value': email !== '' }"
             class="form__input input-email input-email--v1"

@@ -3,11 +3,14 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   FacebookAuthProvider,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword
 } from 'firebase/auth'
 import { auth } from '@/plugins/firebase'
 import { sendDataToServer } from '@/utils/authentication'
 import type { ResponseWithToken } from '@/types/ResponseWithToken'
+// @ts-ignore
+import UserCredential = firebase.auth.UserCredential
 
 // @ts-ignore
 export const useAuthenticationStore = defineStore('authentication', {
@@ -52,6 +55,12 @@ export const useAuthenticationStore = defineStore('authentication', {
         uid: result.user.uid,
         password: password
       }
+    },
+    async createUserWithEmailAndPassword(email: string, password: string) {
+      const result: UserCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const userCredential = this.getUserCredential(result, password)
+      const response: ResponseWithToken = await sendDataToServer(userCredential)
+      console.log(response)
     },
     signOut() {
       localStorage.removeItem('accessToken')
