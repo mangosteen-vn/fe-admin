@@ -7,6 +7,9 @@ import SignIn from '@/components/method-authentication/SignIn.vue'
 import SignUp from '@/components/method-authentication/SignUp.vue'
 
 // @ts-ignore
+import ForGotPassword from '@/components/method-authentication/ForGotPassword.vue'
+
+// @ts-ignore
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -19,6 +22,11 @@ const router = createRouter({
       path: '/sign-in',
       name: 'sign-in',
       component: SignIn
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: ForGotPassword
     },
     {
       path: '/sign-up',

@@ -4,7 +4,8 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  sendPasswordResetEmail
 } from 'firebase/auth'
 import { auth } from '@/plugins/firebase'
 import { sendDataToServer } from '@/utils/authentication'
@@ -14,10 +15,6 @@ import UserCredential = firebase.auth.UserCredential
 
 // @ts-ignore
 export const useAuthenticationStore = defineStore('authentication', {
-  state: () => ({
-    user: {}
-  }),
-
   actions: {
     async signInWithGoogle(): Promise<void> {
       await this.signInWithProvider(new GoogleAuthProvider())
@@ -31,18 +28,18 @@ export const useAuthenticationStore = defineStore('authentication', {
         const userCredential = this.getUserCredential(result)
         const response: ResponseWithToken = await sendDataToServer(userCredential)
         localStorage.setItem('accessToken', response.accessToken)
-      } catch (error) {
-        console.error(error)
+      } catch (e) {
+        console.log(e)
       }
     },
     async signInWithEmailAndPassword(email: string, password: string): Promise<void> {
       try {
-        const result = await signInWithEmailAndPassword(auth, email, password)
+        const result: UserCredential = await signInWithEmailAndPassword(auth, email, password)
         const userCredential = this.getUserCredential(result, password)
         const response: ResponseWithToken = await sendDataToServer(userCredential)
         localStorage.setItem('accessToken', response.accessToken)
-      } catch (error) {
-        console.error(error)
+      } catch (e) {
+        console.log(e)
       }
     },
     getUserCredential(result: any, password: string = '') {
@@ -56,11 +53,23 @@ export const useAuthenticationStore = defineStore('authentication', {
         password: password
       }
     },
-    async createUserWithEmailAndPassword(email: string, password: string) {
-      const result: UserCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const userCredential = this.getUserCredential(result, password)
-      const response: ResponseWithToken = await sendDataToServer(userCredential)
-      console.log(response)
+    async createUserWithEmailAndPassword(email: string, password: string): Promise<void> {
+      try {
+        const result: UserCredential = await createUserWithEmailAndPassword(auth, email, password)
+        const userCredential = this.getUserCredential(result, password)
+        const response: ResponseWithToken = await sendDataToServer(userCredential)
+        localStorage.setItem('accessToken', response.accessToken)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    async sendPasswordResetEmail(email: string): Promise<void> {
+      try {
+        await sendPasswordResetEmail(auth, email)
+      } catch (e) {
+        console.log(e)
+        throw e // Throw the error to be caught in the component
+      }
     },
     signOut() {
       localStorage.removeItem('accessToken')

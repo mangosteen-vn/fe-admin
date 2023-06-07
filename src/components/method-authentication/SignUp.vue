@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 const authenticationStore = useAuthenticationStore()
 import { useToast } from 'vue-toastification'
+import router from '@/router'
 
 const toast = useToast()
 const email = ref('')
@@ -13,21 +14,32 @@ const showPasswordConfirmation = ref(false)
 const accountLoading = ref(false)
 
 function createUserWithEmailAndPassword() {
+  accountLoading.value = true
   if (password.value == passwordConfirmation.value) {
     authenticationStore
       .createUserWithEmailAndPassword(email.value, password.value)
+      .then(() => {
+        email.value = ''
+        password.value = ''
+        passwordConfirmation.value = ''
+        router.push('/sign-in')
+        toast.success('Thanks for signing up')
+        accountLoading.value = false
+      })
       .catch((error) => {
         if (error.code == 'auth/email-already-in-use') {
           toast.error('Email already in use')
           email.value = ''
           password.value = ''
           passwordConfirmation.value = ''
+          accountLoading.value = false
         }
       })
   } else {
     toast.error('Password and Confirm Password does not match')
     password.value = ''
     passwordConfirmation.value = ''
+    accountLoading.value = false
   }
 }
 </script>
@@ -193,7 +205,6 @@ function createUserWithEmailAndPassword() {
       <div class="sign-up__back">
         <router-link to="/sign-in" class="btn-primary--outlined text-decoration-none">
           <v-btn
-            :loading="accountLoading"
             block
             class="text-none"
             color="grey-darken-3"

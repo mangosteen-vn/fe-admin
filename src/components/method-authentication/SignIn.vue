@@ -1,8 +1,11 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAuthenticationStore } from '@/stores/authentication'
+import { useUserStore } from '@/stores/user'
+import router from '@/router'
 
 const authenticationStore = useAuthenticationStore()
+const userStore = useUserStore()
 
 const email = ref('')
 const password = ref('')
@@ -14,60 +17,97 @@ const googleDisable = ref(false)
 const facebookDisable = ref(false)
 const accountDisable = ref(false)
 
-function signInWithGoogle() {
+async function signInWithGoogle() {
   googleLoading.value = true
   facebookDisable.value = true
   accountDisable.value = true
-  authenticationStore
-    .signInWithGoogle()
-    .then(() => {
-      facebookDisable.value = false
-      googleLoading.value = false
-      accountDisable.value = false
-    })
-    .catch(() => {
-      googleLoading.value = false
-      facebookDisable.value = false
-      accountDisable.value = false
-    })
+
+  try {
+    await authenticationStore.signInWithGoogle()
+    const isAdmin = await userStore.checkRole()
+    if (isAdmin) {
+      router.push('/admin/dashboard')
+    } else {
+      router.push('/')
+    }
+    googleLoading.value = false
+    facebookDisable.value = false
+    accountDisable.value = false
+  } catch (error) {
+    console.error(error)
+    googleLoading.value = false
+    facebookDisable.value = false
+    accountDisable.value = false
+  }
 }
 
-function signInWithFacebook() {
+async function signInWithFacebook() {
   facebookLoading.value = true
   googleDisable.value = true
   accountDisable.value = true
-  authenticationStore
-    .signInWithFacebook()
-    .then(() => {
-      facebookLoading.value = false
-      googleDisable.value = false
-      accountDisable.value = false
-    })
-    .catch(() => {
-      facebookLoading.value = false
-      googleDisable.value = false
-      accountDisable.value = false
-    })
+
+  try {
+    await authenticationStore.signInWithFacebook()
+    const isAdmin = await userStore.checkRole()
+    if (isAdmin) {
+      router.push('/admin/dashboard')
+    } else {
+      router.push('/')
+    }
+    facebookLoading.value = false
+    googleDisable.value = false
+    accountDisable.value = false
+  } catch (error) {
+    console.error(error)
+    facebookLoading.value = false
+    googleDisable.value = false
+    accountDisable.value = false
+  }
 }
 
 async function signInWithEmailAndPassword() {
   accountLoading.value = true
   googleDisable.value = true
   facebookDisable.value = true
+
   try {
     await authenticationStore.signInWithEmailAndPassword(email.value, password.value)
+    const isAdmin = await userStore.checkRole()
+    if (isAdmin) {
+      router.push('/admin/dashboard')
+    } else {
+      router.push('/')
+    }
     email.value = ''
     password.value = ''
     accountLoading.value = false
     googleDisable.value = false
     facebookDisable.value = false
   } catch (error) {
+    console.error(error)
     accountLoading.value = false
     googleDisable.value = false
     facebookDisable.value = false
-    console.error(error)
   }
 }
+
+onMounted(async () => {
+  const isAuthenticated = userStore.isAuthenticated
+  const accessToken = localStorage.getItem('accessToken')
+
+  if (accessToken && !isAuthenticated) {
+    try {
+      const isAdmin = await userStore.checkRole()
+      if (isAdmin) {
+        router.push('/admin/dashboard')
+      } else {
+        router.push('/')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+})
 </script>
 
 <template>

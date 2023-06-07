@@ -14,6 +14,7 @@
           For help and collaboration with other Vuetify developers,
           <br />please join our online
           <a href="https://community.vuetifyjs.com" target="_blank">Discord Community</a>
+          <router-link to="/sign-in">sign-in</router-link>
         </p>
       </v-col>
 
@@ -74,13 +75,11 @@ import { useToast } from 'vue-toastification'
 import apiClient from '@/plugins/axios'
 // Logo
 import logo from '../assets/logo.svg'
-import { fetchUserProfile } from '@/utils/authentication'
+import { mapState } from 'pinia'
 
-const toast = useToast()
-
+import { useUserStore } from '@/stores/user'
 export default defineComponent({
   name: 'HelloWorld',
-
   data() {
     return {
       ecosystem: [
@@ -131,9 +130,6 @@ export default defineComponent({
         }
       ]
     }
-  },
-  created() {
-    fetchUserProfile()
   }
 })
 </script>
