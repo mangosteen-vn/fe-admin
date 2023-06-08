@@ -5,9 +5,12 @@ import HomeView from '../views/HomeView.vue'
 import SignIn from '@/components/method-authentication/SignIn.vue'
 // @ts-ignore
 import SignUp from '@/components/method-authentication/SignUp.vue'
-
 // @ts-ignore
 import ForGotPassword from '@/components/method-authentication/ForGotPassword.vue'
+// @ts-ignore
+import AdminLayout from '@/views/AdminLayout.vue'
+// @ts-ignore
+import DashboardView from '@/components/admin/dashboard/index.vue'
 
 // @ts-ignore
 const router = createRouter({
@@ -32,6 +35,16 @@ const router = createRouter({
       path: '/sign-up',
       name: 'sign-up',
       component: SignUp
+    },
+    {
+      path: '/admin',
+      component: AdminLayout,
+      children: [
+        {
+          path: 'dashboard',
+          component: DashboardView
+        }
+      ]
     }
   ]
 })
