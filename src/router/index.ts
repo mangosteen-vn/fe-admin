@@ -6,7 +6,7 @@ import SignIn from '@/components/method-authentication/SignIn.vue'
 // @ts-ignore
 import SignUp from '@/components/method-authentication/SignUp.vue'
 // @ts-ignore
-import ForGotPassword from '@/components/method-authentication/ForGotPassword.vue'
+import ForGotPassword from '@/components/method-authentication/ForgotPassword.vue'
 // @ts-ignore
 import AdminLayout from '@/views/AdminLayout.vue'
 // @ts-ignore

@@ -1,37 +1,47 @@
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import Aside from '@/components/admin/aside/index.vue'
-import Header from "@/components/admin/header/index.vue";
+import Header from '@/components/admin/header/index.vue'
+import { useUserStore } from '@/stores/user'
 
 export default defineComponent({
   components: {
-      Header,
+    Header,
     Aside
+  },
+  setup() {
+    const userStore = useUserStore()
+    const accessToken = ref(localStorage.getItem('accessToken'))
+    const user = ref(null)
+    onMounted(async () => {
+      if (accessToken.value) {
+        user.value = await userStore.fetchUserProfile()
+      }
+    })
+    return {
+      user
+    }
   }
 })
 </script>
+
 <template>
   <div class="admin-layout open">
-    <aside>
-      <Aside></Aside>
-    </aside>
-
+    <Aside></Aside>
     <div class="layout-content-wrapper">
-      <div class="layout-content-padding px-4 py-3 position-relative">
-        <header>
-            <Header></Header>
-        </header>
-        <v-main>
-          <router-view />
-        </v-main>
-      </div>
+      <Header :user="user"></Header>
+      <v-main>
+        {{ user }}
+        <router-view />
+      </v-main>
     </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .admin-layout {
   height: 100%;
-  background-color: var(--bs-secondary-bg);
+  background: rgb(var(--v-theme-background-custom));
+
   aside {
     position: fixed;
     top: 0;
@@ -39,27 +49,34 @@ export default defineComponent({
     height: 100%;
     background-color: var(--bs-white);
   }
-  .v-main{
-    padding-top: 1rem;
+
+  .layout-content-wrapper {
+    .v-main {
+      padding: 1rem 24px 1rem 24px;
+      max-inline-size: 1440px;
+      margin: auto;
+    }
   }
-  header{
-    position: sticky;
-    top: 1rem;
-    right: 24px;
-    left: 0 ;
-  }
+
   &.open {
     aside {
       width: 260px;
     }
+
     .layout-content-wrapper {
       padding-left: 260px;
       height: 100%;
     }
   }
+
   &.close {
     aside {
       width: 84px;
+    }
+
+    .layout-content-wrapper {
+      padding-left: 84px;
+      height: 100%;
     }
   }
 }

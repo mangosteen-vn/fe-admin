@@ -14,12 +14,12 @@ export const useUserStore = defineStore('user', {
   actions: {
     async fetchUserProfile(): Promise<void> {
       try {
-        const response: User | null = await fetchUserProfile()
-        await this.checkRole()
+        const user: User | null = await fetchUserProfile()
+        // await this.checkRole()
         // @ts-ignore
-        this.user = response.data[0]
+        this.user = user
         // @ts-ignore
-        return response.data[0]
+        return user
       } catch (e) {
         console.log(e)
       }

@@ -9,8 +9,9 @@ export async function fetchUserProfile(): Promise<User | null> {
     return response.data
   } catch (e) {
     // @ts-ignore
-    if (e.message == 'Network Error') {
+    if (e.response && e.response.status === 404) {
       localStorage.removeItem('accessToken')
+      console.log('Network Error, removed token from localStorage successfully')
     }
     // @ts-ignore
     if (e.response && e.response.status === 401) {
@@ -20,9 +21,10 @@ export async function fetchUserProfile(): Promise<User | null> {
     throw e
   }
 }
+
 export async function sendDataToServer(userCredential: any): Promise<ResponseWithToken> {
   try {
-    const response: AxiosResponse = await apiClient.post('login/firebase', userCredential)
+    const response = await apiClient.post('login/firebase', userCredential)
     return response.data
   } catch (error) {
     console.error(error)
@@ -32,12 +34,13 @@ export async function sendDataToServer(userCredential: any): Promise<ResponseWit
 
 export async function checkRole() {
   try {
-    const response: AxiosResponse = await apiClient.post('check-admin')
+    const response: AxiosResponse = await apiClient.post('check-admin-role')
     return response.data
   } catch (e) {
     // @ts-ignore
-    if (e.message == 'Network Error') {
+    if (e.response && e.response.status === 404) {
       localStorage.removeItem('accessToken')
+      console.log('Network Error, removed token from localStorage successfully')
     }
     // @ts-ignore
     if (e.response && e.response.status === 401) {

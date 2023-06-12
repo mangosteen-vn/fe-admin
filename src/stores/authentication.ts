@@ -27,6 +27,7 @@ export const useAuthenticationStore = defineStore('authentication', {
         const result = await signInWithPopup(auth, provider)
         const userCredential = this.getUserCredential(result)
         const response: ResponseWithToken = await sendDataToServer(userCredential)
+        console.log(response.accessToken)
         localStorage.setItem('accessToken', response.accessToken)
       } catch (e) {
         console.log(e)
@@ -68,7 +69,7 @@ export const useAuthenticationStore = defineStore('authentication', {
         await sendPasswordResetEmail(auth, email)
       } catch (e) {
         console.log(e)
-        throw e // Throw the error to be caught in the component
+        throw e
       }
     },
     signOut() {
