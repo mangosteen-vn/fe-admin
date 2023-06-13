@@ -12,26 +12,30 @@ export default defineComponent({
   setup() {
     const userStore = useUserStore()
     const accessToken = ref(localStorage.getItem('accessToken'))
-    const user = ref(null)
+    const openAside = ref(true)
     onMounted(async () => {
       if (accessToken.value) {
-        user.value = await userStore.fetchUserProfile()
+        await userStore.fetchUserProfile()
       }
     })
     return {
-      user
+      openAside
+    }
+  },
+  methods: {
+    handleOpenAsideUpdate(newValue) {
+      this.openAside = newValue
     }
   }
 })
 </script>
 
 <template>
-  <div class="admin-layout open">
+  <div class="admin-layout" :class="{ open: openAside, close: !openAside }">
     <Aside></Aside>
     <div class="layout-content-wrapper">
-      <Header :user="user"></Header>
+      <Header :openAside="openAside" @update:openAside="handleOpenAsideUpdate"></Header>
       <v-main>
-        {{ user }}
         <router-view />
       </v-main>
     </div>
@@ -61,22 +65,26 @@ export default defineComponent({
   &.open {
     aside {
       width: 260px;
+      transition: 0.4s;
     }
 
     .layout-content-wrapper {
       padding-left: 260px;
       height: 100%;
+      transition: 0.4s;
     }
   }
 
   &.close {
     aside {
       width: 84px;
+      transition: 0.4s;
     }
 
     .layout-content-wrapper {
       padding-left: 84px;
       height: 100%;
+      transition: 0.4s;
     }
   }
 }

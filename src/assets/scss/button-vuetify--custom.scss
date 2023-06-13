@@ -37,3 +37,19 @@
 .v-btn {
   letter-spacing: normal;
 }
+.btn-sign-out-modal {
+  color: var(--bs-black);
+  svg {
+    fill: var(--bs-black);
+  }
+  &:hover {
+    background-color: rgba(101, 31, 255, 0.06);
+    color: rgba(101, 31, 255);
+    cursor: pointer;
+    transition: 0.4s;
+    svg {
+      fill: rgba(101, 31, 255);
+      transition: 0.4s;
+    }
+  }
+}

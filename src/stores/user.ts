@@ -1,34 +1,26 @@
 import { defineStore } from 'pinia'
 import { checkRole, fetchUserProfile } from '@/utils/authentication'
-import type { User } from '@/types/User'
 
+// @ts-ignore
 export const useUserStore = defineStore('user', {
   state: () => ({
-    isAuthenticated: false,
     user: {},
-    isAdmin: false
+    userRole: ''
   }),
-  getters: {
-    getCurrentUser: (state) => state.user
-  },
   actions: {
     async fetchUserProfile(): Promise<void> {
       try {
-        const user: User | null = await fetchUserProfile()
-        // await this.checkRole()
-        // @ts-ignore
-        this.user = user
-        // @ts-ignore
-        return user
+        await this.checkRole()
+        this.user = await fetchUserProfile()
       } catch (e) {
         console.log(e)
       }
     },
     async checkRole(): Promise<void> {
       try {
-        const response = await checkRole()
-        this.isAdmin = response.isAdmin
-        return response.isAdmin
+        const userRole = await checkRole()
+        this.userRole = userRole
+        return userRole
       } catch (e) {
         console.log(e)
       }

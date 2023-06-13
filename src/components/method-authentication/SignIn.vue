@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useAuthenticationStore } from '@/stores/authentication'
 import { useUserStore } from '@/stores/user'
 import router from '@/router'
+import { useToast } from 'vue-toastification'
 
 const authenticationStore = useAuthenticationStore()
 const userStore = useUserStore()
@@ -16,6 +17,7 @@ const accountLoading = ref(false)
 const googleDisable = ref(false)
 const facebookDisable = ref(false)
 const accountDisable = ref(false)
+const toast = useToast()
 
 async function signInWithGoogle() {
   googleLoading.value = true
@@ -24,12 +26,8 @@ async function signInWithGoogle() {
 
   try {
     await authenticationStore.signInWithGoogle()
-    const isAdmin = await userStore.checkRole()
-    if (isAdmin) {
-      router.push('/admin/dashboard')
-    } else {
-      router.push('/')
-    }
+    await checkUserRoleAndRedirect()
+
     googleLoading.value = false
     facebookDisable.value = false
     accountDisable.value = false
@@ -48,12 +46,8 @@ async function signInWithFacebook() {
 
   try {
     await authenticationStore.signInWithFacebook()
-    const isAdmin = await userStore.checkRole()
-    if (isAdmin) {
-      router.push('/admin/dashboard')
-    } else {
-      router.push('/')
-    }
+    await checkUserRoleAndRedirect()
+
     facebookLoading.value = false
     googleDisable.value = false
     accountDisable.value = false
@@ -72,12 +66,8 @@ async function signInWithEmailAndPassword() {
 
   try {
     await authenticationStore.signInWithEmailAndPassword(email.value, password.value)
-    const isAdmin = await userStore.checkRole()
-    if (isAdmin) {
-      router.push('/admin/dashboard')
-    } else {
-      router.push('/')
-    }
+    await checkUserRoleAndRedirect()
+
     email.value = ''
     password.value = ''
     accountLoading.value = false
@@ -91,14 +81,13 @@ async function signInWithEmailAndPassword() {
   }
 }
 
-onMounted(async () => {
-  const isAuthenticated = userStore.isAuthenticated
+async function checkUserRoleAndRedirect() {
   const accessToken = localStorage.getItem('accessToken')
-
-  if (accessToken && !isAuthenticated) {
+  if (accessToken) {
     try {
-      const isAdmin = await userStore.checkRole()
-      if (isAdmin) {
+      const userRole = await userStore.checkRole()
+      if (userRole == 'admin' || userRole == 'super admin') {
+        toast.success('You are now logged in.')
         router.push('/admin/dashboard')
       } else {
         router.push('/')
@@ -107,6 +96,10 @@ onMounted(async () => {
       console.error(error)
     }
   }
+}
+
+onMounted(async () => {
+  await checkUserRoleAndRedirect()
 })
 </script>
 

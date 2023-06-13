@@ -6,7 +6,6 @@ import '@/plugins/bootstrap'
 import '@/plugins/toast'
 import firebase from '@/plugins/firebase'
 import { AOS } from '@/plugins/aos'
-import accesTokenPlugin from '@/plugins/accesTokenPlugin'
 /**
  * plugins/index.ts
  *

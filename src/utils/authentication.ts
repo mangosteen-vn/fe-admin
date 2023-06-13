@@ -1,24 +1,14 @@
 import apiClient from '@/plugins/axios'
 import type { User } from '@/types/User'
 import type { ResponseWithToken } from '@/types/ResponseWithToken'
-import type { AxiosResponse } from 'axios'
 
-export async function fetchUserProfile(): Promise<User | null> {
+export async function fetchUserProfile(): Promise<User | {}> {
   try {
     const response = await apiClient.post('profile')
     return response.data
-  } catch (e) {
-    // @ts-ignore
-    if (e.response && e.response.status === 404) {
-      localStorage.removeItem('accessToken')
-      console.log('Network Error, removed token from localStorage successfully')
-    }
-    // @ts-ignore
-    if (e.response && e.response.status === 401) {
-      localStorage.removeItem('accessToken')
-      console.log('Login token has expired, removed token from localStorage successfully')
-    }
-    throw e
+  } catch (error) {
+    handleCommonErrors(error)
+    return {}
   }
 }
 
@@ -32,21 +22,27 @@ export async function sendDataToServer(userCredential: any): Promise<ResponseWit
   }
 }
 
-export async function checkRole() {
+export async function checkRole(): Promise<any> {
   try {
-    const response: AxiosResponse = await apiClient.post('check-admin-role')
-    return response.data
-  } catch (e) {
-    // @ts-ignore
-    if (e.response && e.response.status === 404) {
-      localStorage.removeItem('accessToken')
-      console.log('Network Error, removed token from localStorage successfully')
-    }
-    // @ts-ignore
-    if (e.response && e.response.status === 401) {
-      localStorage.removeItem('accessToken')
-      console.log('Login token has expired, removed token from localStorage successfully')
-    }
-    throw e
+    const response = await apiClient.post('check-admin-role')
+    return response.data.userRole
+  } catch (error) {
+    handleCommonErrors(error)
   }
+}
+
+function removeAccessTokenFromLocalStorage(): void {
+  localStorage.removeItem('accessToken')
+  console.log('Token removed from localStorage successfully')
+}
+
+function handleCommonErrors(error: any): void {
+  if (error.response) {
+    const { status } = error.response
+    if (status === 404 || status === 401) {
+      removeAccessTokenFromLocalStorage()
+      console.log('Network Error or login token has expired')
+    }
+  }
+  throw error
 }

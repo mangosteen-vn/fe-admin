@@ -27,7 +27,6 @@ export const useAuthenticationStore = defineStore('authentication', {
         const result = await signInWithPopup(auth, provider)
         const userCredential = this.getUserCredential(result)
         const response: ResponseWithToken = await sendDataToServer(userCredential)
-        console.log(response.accessToken)
         localStorage.setItem('accessToken', response.accessToken)
       } catch (e) {
         console.log(e)

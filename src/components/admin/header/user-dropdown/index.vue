@@ -1,15 +1,29 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
+import type { User } from '@/types/User'
+import IconSignout from '@/components/icons/header/IconSignout.vue'
+import { useAuthenticationStore } from '@/stores/authentication'
+import router from '@/router'
+import { useToast } from 'vue-toastification'
 
 export default defineComponent({
   name: 'UserDropdown',
+  components: { IconSignout },
   setup() {
     const userStore = useUserStore()
-    const user = ref(null)
-
+    const authStore = useAuthenticationStore()
+    const user = ref<User | null>(null)
+    const userRole = ref('')
+    const toast = useToast()
+    const signOut = async () => {
+      await authStore.signOut()
+      router.push('/sign-in')
+      toast.success('You are now logged out.')
+    }
     onMounted(() => {
       user.value = userStore.user
+      userRole.value = userStore.userRole
     })
 
     watch(
@@ -19,19 +33,28 @@ export default defineComponent({
       }
     )
 
+    watch(
+      () => userStore.userRole,
+      (newUserRole) => {
+        userRole.value = newUserRole
+      }
+    )
+
     return {
-      user
+      user,
+      userRole,
+      signOut
     }
   }
 })
 </script>
 <template>
-  <v-menu transition="scale-transition">
+  <v-menu :close-on-content-click="false" activator="parent" transition="scale-transition">
     <template v-slot:activator="{ props }">
       <v-btn class="btn--circle-38px" icon v-bind="props" variant="text">
         <template v-slot:default>
           <v-badge
-            bordered="true"
+            bordered
             color="success"
             dot
             location="bottom end"
@@ -39,20 +62,20 @@ export default defineComponent({
             offset-y="3"
             text-color="success"
           >
-            <img
-              alt="Admin Icon"
-              class="w-100 h-100 rounded-circle"
-              src="@/assets/images/avatar-df.svg"
-            />
+            <v-avatar
+              :image="user && user.avatar ? user.avatar : ''"
+              class="v-avatar--h38px"
+              color="mangosteen-user__avatar"
+            ></v-avatar>
           </v-badge>
         </template>
       </v-btn>
     </template>
 
     <v-list class="mangosteen-list">
-      <div class="mangosteen-user d-flex align-items-center px-4 pt-3 pb-2">
+      <div class="mangosteen-user d-flex align-items-center">
         <v-badge
-          bordered="true"
+          bordered
           color="success"
           dot
           location="bottom end"
@@ -68,40 +91,20 @@ export default defineComponent({
         </v-badge>
         <div class="mangosteen-user__desc">
           <p class="fw-semibold mb-0 text-black">{{ user.name }}</p>
-          <p class="fs-8 mb-0">Super admin</p>
+          <p class="fs-8 mb-0 text-capitalize">{{ userRole }}</p>
         </div>
       </div>
       <v-divider class="my-2"></v-divider>
       <div class="mangosteen-user-sign-out">
-        <v-list-item class="mx-2 my-1">
+        <v-list-item
+          @click="signOut"
+          class="mx-2 my-1 rounded-6 btn-sign-out-modal"
+          density="compact"
+          variant="text"
+        >
           <template v-slot:prepend>
-            <svg
-              aria-hidden="true"
-              class="v-icon notranslate v-theme--light me-2 iconify iconify--tabler"
-              height="1em"
-              role="img"
-              style="font-size: 22px; height: 22px; width: 22px"
-              tag="i"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink"
-            >
-              <g
-                fill="none"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-              >
-                <path
-                  d="M14 8V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2"
-                ></path>
-                <path d="M7 12h14l-3-3m0 6l3-3"></path>
-              </g>
-            </svg>
+            <IconSignout></IconSignout>
           </template>
-
           <v-list-item-title class="fw-medium">Sign Out</v-list-item-title>
         </v-list-item>
       </div>
@@ -116,6 +119,8 @@ export default defineComponent({
   box-shadow: 0 2px 6px rgba(47, 43, 61, 0.14), 0 0 transparent, 0 0 transparent !important;
 
   .mangosteen-user {
+    padding: 6px 24px;
+
     &__desc {
       padding-left: 12px;
     }

@@ -7,7 +7,15 @@ import { onMounted } from 'vue'
 export default defineComponent({
   name: 'Header',
   components: { UserDropdown },
-  props: ['user']
+  props: ['openAside'],
+  created() {
+    console.log(this.openAside)
+  },
+  methods: {
+    toggleOpenAside() {
+      this.$emit('update:openAside', !this.openAside)
+    }
+  }
 })
 </script>
 <template>
@@ -15,7 +23,7 @@ export default defineComponent({
     <div class="nav-bar">
       <div class="nav-bar-container d-flex align-items-center justify-content-between">
         <div class="nav-bar__left">
-          <v-btn density="comfortable" icon variant="text">
+          <v-btn density="comfortable" icon variant="text" @click="toggleOpenAside">
             <template v-slot:default>
               <img alt="" src="@/assets/images/header/menu.svg" />
             </template>
@@ -48,8 +56,8 @@ header {
     left: 0;
     right: 0;
     bottom: -0.75rem;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     background: linear-gradient(
       180deg,
       rgba(248, 247, 250, 70%) 44%,
