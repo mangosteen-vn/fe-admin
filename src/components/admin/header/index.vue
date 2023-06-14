@@ -8,9 +8,6 @@ export default defineComponent({
   name: 'Header',
   components: { UserDropdown },
   props: ['openAside'],
-  created() {
-    console.log(this.openAside)
-  },
   methods: {
     toggleOpenAside() {
       this.$emit('update:openAside', !this.openAside)
