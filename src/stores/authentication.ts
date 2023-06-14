@@ -68,7 +68,7 @@ export const useAuthenticationStore = defineStore('authentication', {
         await sendPasswordResetEmail(auth, email)
       } catch (e) {
         console.log(e)
-        throw e // Throw the error to be caught in the component
+        throw e
       }
     },
     signOut() {
