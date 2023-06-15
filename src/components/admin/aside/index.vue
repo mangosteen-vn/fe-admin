@@ -29,9 +29,25 @@ export default defineComponent({
                 {
                     title: 'Invoice',
                     iconComponent: 'IconMail',
-                    isActive: true,
+                    isActive: false,
                     link: '',
-                    type: 'group', isOpen: true,
+                    type: 'group', isOpen: false,
+
+                    children: [
+                        {
+                            title: 'Email',
+                            icon: 'IconList',
+                            isActive: true,
+                            link: '/admin/him'
+                        }
+                    ]
+                },
+                {
+                    title: 'Invoice',
+                    iconComponent: 'IconMail',
+                    isActive: false,
+                    link: '',
+                    type: 'group', isOpen: false,
 
                     children: [
                         {
@@ -49,9 +65,6 @@ export default defineComponent({
         isActiveRoute(link) {
             return this.$route.path === link
         },
-        toggleGroup(item) {
-            item.isOpen = !item.isOpen;
-        }
     }
 })
 </script>
@@ -64,7 +77,7 @@ export default defineComponent({
             <h5 class="aside__logo__branch fw-bold mb-0 text-deep-purple-lighten-1">MangPlat</h5>
         </a>
         <ul class="aside__menu aside-nav">
-            <li v-for="menuItem of menuItems" :key="menuItem.title"
+            <li v-for="(menuItem, index) in menuItems" :key="menuItem.title"
                 :class="{'nav-item': menuItem.type === 'link', 'nav-group': menuItem.type === 'group', 'active': menuItem.isActive, 'open': menuItem.isOpen, 'nav-title': menuItem.type === 'title'}">
                 <template v-if="menuItem.type === 'link'">
                     <router-link
@@ -77,12 +90,12 @@ export default defineComponent({
                     </router-link>
                 </template>
                 <template v-if="menuItem.type === 'group'">
-                    <div class="nav-group__label" @click="toggleGroup(menuItem)">
+                    <a class="nav-group__label collapsed" data-bs-toggle="collapse" :href="'#navCollapse' + index" role="button" aria-expanded="false" :aria-controls="'#navCollapse' + index">
                         <component :is="menuItem.iconComponent" class="nav-item__link__icon"></component>
                         <span class="nav-group__label__title">{{ menuItem.title }}</span>
                         <IconArrow class="nav-group__label__arrow"></IconArrow>
-                    </div>
-                    <ul class="nav-group-children">
+                    </a>
+                    <ul class="nav-group-children collapse" :id="'navCollapse' + index">
                         <li v-for="menuItemChildren of menuItem.children" :key="menuItemChildren.title"
                             class="nav-item">
                             <router-link class="nav-item__link" :to="menuItemChildren.link"
@@ -101,6 +114,7 @@ export default defineComponent({
                 </template>
             </li>
         </ul>
+
     </aside>
 </template>
 <style lang="scss" scoped>
@@ -222,19 +236,8 @@ export default defineComponent({
         }
       }
 
-      &.open {
-        .nav-group-children {
-          height: auto;
-          transition: max-height 0.3s ease-in;
-        }
-      }
-
       &-children {
-        max-height: 0;
-        overflow: hidden;
-        transition: height 0.3s ease-out;
-        padding: 0;
-
+        padding-left: 0;
         .nav-item__link__icon {
           width: 10px !important;
           height: 10px !important;
@@ -313,20 +316,6 @@ export default defineComponent({
 
         &__arrow {
           display: none;
-        }
-      }
-
-      &.open {
-        .nav-group-children {
-          height: 0;
-          display: none;
-          padding: 0;
-
-          .nav-item__link__icon {
-            width: 10px !important;
-            height: 10px !important;
-            margin-right: 12px;
-          }
         }
       }
     }
