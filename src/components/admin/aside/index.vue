@@ -316,6 +316,7 @@ export default defineComponent({
       .nav-item__link__title {
         overflow: hidden;
         display: none;
+        transition: 1s;
       }
     }
 
@@ -350,6 +351,51 @@ export default defineComponent({
 
         &__arrow {
           display: none;
+        }
+      }
+    }
+  }
+}
+
+$xs: 0;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+$xll: 1300px;
+$xxl: 1400px;
+@media screen and (min-width: $xll) {
+  .aside {
+    &.close {
+      .nav-group {
+        &:hover {
+          .nav-group-children {
+            opacity: 1;
+            visibility: visible;
+            transition: 0.4s;
+          }
+        }
+        position: relative;
+        &-children {
+          display: block;
+          opacity: 0;
+          visibility: hidden;
+          background-color: var(--bs-white);
+          position: absolute;
+          left: 100%;
+          margin-left: 2px;
+          padding: 12px 0 8px 0;
+          top: 0;
+          transition: 0.4s;
+          border-radius: 6px;
+          box-shadow: 0 2px 6px rgba(47, 43, 61, 0.14), 0 0 transparent, 0 0 transparent !important;
+
+          .nav-item {
+            &__link__title {
+              width: 160px;
+              display: block !important;
+            }
+          }
         }
       }
     }
