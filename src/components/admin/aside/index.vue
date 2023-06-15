@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
+import { defineComponent } from 'vue'
 import IconPinia from '@/components/icons/aside/IconPinia.vue'
 import IconMail from '@/components/icons/aside/menu/IconMail.vue'
 import IconArrow from '@/components/icons/aside/menu/IconArrow.vue'
@@ -7,115 +7,149 @@ import IconList from '@/components/icons/aside/menu/IconList.vue'
 import IconDrash from '@/components/icons/aside/menu/IconDrash.vue'
 
 export default defineComponent({
-    name: 'Aside',
-    components: {IconDrash, IconList, IconArrow, IconMail, IconPinia},
-    data() {
-        return {
-            menuItems: [
-                {
-                    title: 'Email',
-                    iconComponent: 'IconMail',
-                    isActive: true,
-                    link: '/admin/dashboard',
-                    type: 'link'
-
-                },
-                {
-                    title: 'App & Page',
-                    iconComponent: 'IconMail',
-                    link: '',
-                    type: 'title'
-                },
-                {
-                    title: 'Invoice',
-                    iconComponent: 'IconMail',
-                    isActive: false,
-                    link: '',
-                    type: 'group', isOpen: false,
-
-                    children: [
-                        {
-                            title: 'Email',
-                            icon: 'IconList',
-                            isActive: true,
-                            link: '/admin/him'
-                        }
-                    ]
-                },
-                {
-                    title: 'Invoice',
-                    iconComponent: 'IconMail',
-                    isActive: false,
-                    link: '',
-                    type: 'group', isOpen: false,
-
-                    children: [
-                        {
-                            title: 'Email',
-                            icon: 'IconList',
-                            isActive: true,
-                            link: '/admin/him'
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    methods: {
-        isActiveRoute(link) {
-            return this.$route.path === link
+  name: 'Aside',
+  components: { IconDrash, IconList, IconArrow, IconMail, IconPinia },
+  data() {
+    return {
+      menuItems: [
+        {
+          title: 'Email',
+          iconComponent: 'IconMail',
+          isActive: true,
+          link: '/admin/hehe',
+          type: 'link'
         },
+        {
+          title: 'App & Page',
+          iconComponent: 'IconMail',
+          link: '',
+          type: 'title'
+        },
+        {
+          title: 'Invoice',
+          iconComponent: 'IconMail',
+          isActive: false,
+          link: '',
+          type: 'group',
+          isOpen: false,
+
+          children: [
+            {
+              title: 'Email',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/dashboard'
+            }
+          ]
+        },
+        {
+          title: 'Invoice',
+          iconComponent: 'IconMail',
+          isActive: false,
+          link: '',
+          type: 'group',
+          isOpen: false,
+
+          children: [
+            {
+              title: 'Email',
+              icon: 'IconList',
+              isActive: true,
+              link: '/admin/him'
+            }
+          ]
+        }
+      ]
     }
+  },
+  methods: {
+    isActiveRoute(link) {
+      return this.$route.path === link
+    }
+  },
+  created() {
+    this.menuItems.forEach((menuItem) => {
+      if (menuItem.type === 'group') {
+        menuItem.isActive = menuItem.children.some((child) => child.link === this.$route.path)
+      }
+    })
+  }
 })
 </script>
 <template>
-    <aside class="aside">
-        <a class="aside__logo d-flex align-items-center gap-3 text-decoration-none">
-            <div class="aside__logo__icon">
-                <IconPinia></IconPinia>
-            </div>
-            <h5 class="aside__logo__branch fw-bold mb-0 text-deep-purple-lighten-1">MangPlat</h5>
-        </a>
-        <ul class="aside__menu aside-nav">
-            <li v-for="(menuItem, index) in menuItems" :key="menuItem.title"
-                :class="{'nav-item': menuItem.type === 'link', 'nav-group': menuItem.type === 'group', 'active': menuItem.isActive, 'open': menuItem.isOpen, 'nav-title': menuItem.type === 'title'}">
-                <template v-if="menuItem.type === 'link'">
-                    <router-link
-                            class="nav-item__link"
-                            :class="{ 'router-link-active': isActiveRoute(menuItem.link) }"
-                            :to="menuItem.link"
-                    >
-                        <component :is="menuItem.iconComponent" class="nav-item__link__icon"></component>
-                        <span class="nav-item__link__title">{{ menuItem.title }}</span>
-                    </router-link>
-                </template>
-                <template v-if="menuItem.type === 'group'">
-                    <a class="nav-group__label collapsed" data-bs-toggle="collapse" :href="'#navCollapse' + index" role="button" aria-expanded="false" :aria-controls="'#navCollapse' + index">
-                        <component :is="menuItem.iconComponent" class="nav-item__link__icon"></component>
-                        <span class="nav-group__label__title">{{ menuItem.title }}</span>
-                        <IconArrow class="nav-group__label__arrow"></IconArrow>
-                    </a>
-                    <ul class="nav-group-children collapse" :id="'navCollapse' + index">
-                        <li v-for="menuItemChildren of menuItem.children" :key="menuItemChildren.title"
-                            class="nav-item">
-                            <router-link class="nav-item__link" :to="menuItemChildren.link"
-                                         :class="{ 'router-link-active': isActiveRoute(menuItemChildren.link) }">
-                                <IconList class="nav-item__link__icon"></IconList>
-                                <span class="nav-item__link__title"> {{ menuItemChildren.title }} </span>
-                            </router-link>
-                        </li>
-                    </ul>
-                </template>
-                <template v-if="menuItem.type === 'title'">
-                    <div class="title-wrapper">
-                        <span class="title-text">App & Page</span>
-                        <IconDrash class="nav-title__icon"></IconDrash>
-                    </div>
-                </template>
+  <aside class="aside">
+    <a class="aside__logo d-flex align-items-center gap-3 text-decoration-none">
+      <div class="aside__logo__icon">
+        <IconPinia></IconPinia>
+      </div>
+      <h5 class="aside__logo__branch fw-bold mb-0 text-deep-purple-lighten-1">MangPlat</h5>
+    </a>
+    <ul class="aside__menu aside-nav">
+      <li
+        v-for="(menuItem, index) in menuItems"
+        :key="menuItem.title"
+        :class="{
+          'nav-item': menuItem.type === 'link',
+          'nav-group': menuItem.type === 'group',
+          active: menuItem.isActive,
+          open: menuItem.isOpen,
+          'nav-title': menuItem.type === 'title'
+        }"
+      >
+        <template v-if="menuItem.type === 'link'">
+          <router-link
+            class="nav-item__link"
+            :class="{ 'router-link-active': isActiveRoute(menuItem.link) }"
+            :to="menuItem.link"
+          >
+            <component :is="menuItem.iconComponent" class="nav-item__link__icon"></component>
+            <span class="nav-item__link__title">{{ menuItem.title }}</span>
+          </router-link>
+        </template>
+        <template v-if="menuItem.type === 'group'">
+          <a
+            class="nav-group__label"
+            data-bs-toggle="collapse"
+            :href="'#navCollapse' + index"
+            role="button"
+            aria-expanded="false"
+            :aria-controls="'#navCollapse' + index"
+            :class="{ collapsed: menuItem.isActive }"
+          >
+            <component :is="menuItem.iconComponent" class="nav-item__link__icon"></component>
+            <span class="nav-group__label__title">{{ menuItem.title }}</span>
+            <IconArrow class="nav-group__label__arrow"></IconArrow>
+          </a>
+          <ul
+            class="nav-group-children collapse"
+            :class="{ show: menuItem.isActive }"
+            :id="'navCollapse' + index"
+          >
+            <li
+              v-for="menuItemChildren of menuItem.children"
+              :key="menuItemChildren.title"
+              class="nav-item"
+            >
+              <router-link
+                class="nav-item__link"
+                :to="menuItemChildren.link"
+                :class="{ 'router-link-active': isActiveRoute(menuItemChildren.link) }"
+              >
+                <IconList class="nav-item__link__icon"></IconList>
+                <span class="nav-item__link__title"> {{ menuItemChildren.title }} </span>
+              </router-link>
             </li>
-        </ul>
-
-    </aside>
+          </ul>
+        </template>
+        <template v-if="menuItem.type === 'title'">
+          <div class="title-wrapper">
+            <span class="title-text">App & Page</span>
+            <IconDrash class="nav-title__icon"></IconDrash>
+          </div>
+        </template>
+      </li>
+    </ul>
+  </aside>
 </template>
 <style lang="scss" scoped>
 .aside {
@@ -168,9 +202,9 @@ export default defineComponent({
 
         &.router-link-active {
           background: linear-gradient(
-                          72.47deg,
-                          rgb(115, 103, 240) 22.16%,
-                          rgba(115, 103, 240, 0.7) 76.47%
+            72.47deg,
+            rgb(115, 103, 240) 22.16%,
+            rgba(115, 103, 240, 0.7) 76.47%
           ) !important;
           box-shadow: 0 2px 6px rgba(115, 103, 240, 0.48);
           font-weight: 500;
@@ -204,7 +238,7 @@ export default defineComponent({
 
     .nav-group {
       @extend .nav-item;
-      overflow: hidden;
+      margin-bottom: 0;
 
       &__label {
         @extend .nav-item__link;
