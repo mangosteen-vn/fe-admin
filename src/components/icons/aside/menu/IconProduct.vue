@@ -1,9 +1,9 @@
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    class="icon icon-tabler icon-tabler-chevron-right"
-    width="16"
-    height="16"
+    class="icon icon-tabler icon-tabler-box-seam"
+    width="44"
+    height="44"
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="#2c3e50"
@@ -12,12 +12,10 @@
     stroke-linejoin="round"
   >
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M9 6l6 6l-6 6" />
+    <path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9l8 -4.5" />
+    <path d="M12 12l8 -4.5" />
+    <path d="M8.2 9.8l7.6 -4.6" />
+    <path d="M12 12v9" />
+    <path d="M12 12l-8 -4.5" />
   </svg>
 </template>
-<style lang="scss" scoped>
-.icon {
-  width: 16px;
-  height: 16px;
-}
-</style>

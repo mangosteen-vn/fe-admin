@@ -12,10 +12,11 @@ export default defineComponent({
   setup() {
     const userStore = useUserStore()
     const accessToken = ref(localStorage.getItem('accessToken'))
-    const openAside = ref(true || localStorage.getItem('openAside'))
+    const closeAside = ref(true || localStorage.getItem('closeAside'))
+    const hoverAside = ref(true)
 
     const checkMobile = () => {
-      openAside.value = window.innerWidth <= 1300
+      closeAside.value = window.innerWidth <= 1300
     }
 
     onMounted(async () => {
@@ -27,24 +28,35 @@ export default defineComponent({
     })
 
     return {
-      openAside
+      closeAside,
+      hoverAside
     }
   },
 
   methods: {
     handleOpenAsideUpdate(newValue) {
-      this.openAside = newValue
+      this.closeAside = newValue
       if (window.innerWidth >= 1300) {
-        localStorage.setItem('openAside', newValue)
+        localStorage.setItem('closeAside', newValue)
       }
     },
 
     handleOverlayAsideClick() {
-      this.openAside = !this.openAside
+      this.closeAside = !this.closeAside
     },
     handleResize() {
       if (window.innerWidth > 1300) {
-        this.openAside = localStorage.getItem('openAside') === 'true'
+        this.closeAside = localStorage.getItem('closeAside') === 'true'
+      }
+    },
+    changeData() {
+      if (this.closeAside) {
+        this.hoverAside = false
+      }
+    },
+    resetData() {
+      if (this.closeAside) {
+        this.hoverAside = true
       }
     }
   },
@@ -53,7 +65,7 @@ export default defineComponent({
   },
   mounted() {
     if (window.innerWidth > 1300) {
-      this.openAside = localStorage.getItem('openAside') === 'true'
+      this.closeAside = localStorage.getItem('closeAside') === 'true'
     }
     window.addEventListener('resize', this.handleResize)
   }
@@ -61,10 +73,14 @@ export default defineComponent({
 </script>
 
 <template>
-  <div :class="{ close: openAside, open: !openAside }" class="admin-layout position-relative">
-    <Aside :class="{ close: openAside, open: !openAside }"></Aside>
+  <div :class="{ close: closeAside, open: !closeAside }" class="admin-layout position-relative">
+    <Aside
+      :class="{ close: closeAside, open: !closeAside, hovered: !hoverAside }"
+      @mouseover="changeData"
+      @mouseleave="resetData"
+    ></Aside>
     <div class="layout-content-wrapper">
-      <Header :openAside="openAside" @update:openAside="handleOpenAsideUpdate"></Header>
+      <Header :openAside="closeAside" @update:openAside="handleOpenAsideUpdate"></Header>
       <v-main>
         <router-view />
       </v-main>

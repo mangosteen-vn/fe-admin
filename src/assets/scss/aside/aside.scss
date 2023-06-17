@@ -1,0 +1,291 @@
+.aside {
+  overflow: hidden;
+  background: var(--bs-white);
+  box-shadow: 0 2px 6px rgba(47, 43, 61, 0.14), 0 0 transparent, 0 0 transparent;
+  z-index: 9999;
+
+  &__logo {
+    margin: 0 14px;
+    padding: 16px 12px;
+  }
+
+  &__menu {
+    padding: 0;
+
+    .nav-item {
+      list-style: none;
+      margin-bottom: 4px;
+
+      &__link {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        position: relative;
+        margin-block: 0;
+        margin-inline: 0.875rem;
+        padding-block: 0;
+        padding-inline: 0.75rem;
+        white-space: nowrap;
+        border-radius: 6.4px;
+        block-size: 2.375rem;
+
+        &:hover {
+          &::before {
+            opacity: calc(0.04 * 1);
+          }
+        }
+
+        &::before {
+          position: absolute;
+          border-radius: inherit;
+          block-size: 100%;
+          content: '';
+          inline-size: 100%;
+          background-color: rgba(var(--nav-link-inerhit), 0.68);
+          inset: 0;
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        &.router-link-active {
+          background: linear-gradient(
+            72.47deg,
+            rgb(115, 103, 240) 22.16%,
+            rgba(115, 103, 240, 0.7) 76.47%
+          ) !important;
+          box-shadow: 0 2px 6px rgba(115, 103, 240, 0.48);
+          font-weight: 500;
+
+          .nav-item__link__icon {
+            stroke: var(--bs-white);
+          }
+
+          .nav-item__link__title {
+            color: var(--bs-white);
+            font-weight: 600;
+          }
+        }
+
+        &__icon {
+          width: 22px !important;
+          height: 22px !important;
+          stroke: rgba(var(--nav-link-inerhit), 0.68);
+          flex-shrink: 0;
+          margin-inline-start: 0.3rem;
+          margin-inline-end: 0.5rem;
+        }
+
+        &__title {
+          color: rgba(var(--nav-link-inerhit), 0.68);
+          font-weight: 500;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    .nav-group {
+      @extend .nav-item;
+      margin-bottom: 0;
+
+      &.open {
+        .nav-group__label__arrow {
+          transform: rotate(90deg);
+          transition: 0.4s;
+        }
+      }
+      &__label {
+        @extend .nav-item__link;
+        cursor: pointer;
+        margin-bottom: 4px;
+
+        &__icon {
+          @extend .nav-item__link__icon;
+        }
+
+        &__title {
+          @extend .nav-item__link__title;
+          margin-inline-end: auto;
+          white-space: nowrap;
+        }
+
+        &__arrow {
+          stroke: rgba(var(--nav-link-inerhit), 0.68);
+          transform: rotate(0deg);
+          transition: 0.4s;
+        }
+      }
+
+      &.active,
+      &.open {
+        .nav-group__label {
+          &::before {
+            opacity: calc(0.055 * 1);
+            background-color: rgba(var(--nav-link-inerhit), 0.78);
+          }
+        }
+      }
+
+      &-children {
+        padding-left: 0;
+
+        .nav-item__link__icon {
+          width: 10px !important;
+          height: 10px !important;
+          margin-right: 12px;
+        }
+      }
+    }
+
+    .nav-title {
+      text-transform: uppercase;
+      margin: 20px 14px 6px 14px;
+      padding: 0 12px;
+      letter-spacing: 0.4px;
+      list-style: none;
+
+      .title-wrapper {
+        .title-text {
+          font-size: 12px;
+          color: rgba(var(--nav-link-inerhit) 0.42);
+          width: auto;
+          white-space: nowrap;
+        }
+      }
+
+      &__icon {
+        display: none;
+        stroke: rgba(var(--nav-link-inerhit), 0.42);
+      }
+    }
+  }
+
+  &.close {
+    .aside__logo__branch {
+      width: 0;
+      overflow: hidden;
+      visibility: hidden;
+      transition: 1s;
+      transform: translateX(-1px);
+    }
+
+    .nav-item {
+      .nav-item__link__title {
+        overflow: hidden;
+        transition: 1s;
+        width: 0;
+      }
+    }
+
+    .nav-title {
+      .title-wrapper {
+        .title-text {
+          width: 0;
+          overflow: hidden;
+          visibility: hidden;
+          transform: translateX(-1px);
+          display: none;
+          transition: 0.5s;
+        }
+      }
+
+      &__icon {
+        display: block;
+        margin-inline-start: 0.3rem;
+        stroke: rgba(var(--nav-link-inerhit), 0.42);
+      }
+    }
+
+    .nav-group {
+      &__label {
+        &__title {
+          width: 0;
+          overflow: hidden;
+        }
+
+        &__arrow {
+          display: none;
+        }
+      }
+    }
+
+    &.hovered {
+      width: 260px;
+
+      .nav-item__link__title {
+        width: 100%;
+      }
+      .aside__logo__branch {
+        width: 100%;
+        visibility: visible;
+      }
+
+      .nav-title {
+        .title-wrapper {
+          .title-text {
+            width: 100%;
+            display: block;
+            visibility: inherit;
+          }
+        }
+
+        &__icon {
+          display: none;
+        }
+      }
+
+      .nav-group {
+        .nav-group__label__arrow {
+          display: block;
+        }
+        &.open {
+          .nav-group__label {
+            &::before {
+              opacity: calc(0.055 * 1);
+              background-color: rgba(var(--nav-link-inerhit), 0.78);
+            }
+          }
+        }
+        &-children {
+          height: auto;
+          .nav-item__link__title {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+$xs: 0;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+$xll: 1300px;
+$xxl: 1400px;
+@media screen and (min-width: $xll) {
+  .aside {
+    &.close {
+      &:not(.hovered) {
+        .nav-group {
+          &.open {
+            &:not(.active) {
+              .nav-group__label {
+                &::before {
+                  opacity: calc(0.055 * 1);
+                  background-color: var(--bs-white);
+                }
+              }
+            }
+          }
+        }
+      }
+      .nav-group {
+        &-children {
+          height: 0;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+}

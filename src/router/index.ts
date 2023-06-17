@@ -11,6 +11,7 @@ import ForGotPassword from '@/components/method-authentication/ForgotPassword.vu
 import AdminLayout from '@/views/AdminLayout.vue'
 // @ts-ignore
 import DashboardView from '@/components/admin/dashboard/index.vue'
+import { useUserStore } from '@/stores/user'
 
 // @ts-ignore
 const router = createRouter({
@@ -39,6 +40,9 @@ const router = createRouter({
     {
       path: '/admin',
       component: AdminLayout,
+      meta: {
+        requireAdmin: true
+      },
       children: [
         {
           path: 'dashboard',
@@ -48,5 +52,4 @@ const router = createRouter({
     }
   ]
 })
-
 export default router
