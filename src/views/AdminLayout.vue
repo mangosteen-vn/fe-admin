@@ -36,6 +36,10 @@ export default defineComponent({
   methods: {
     handleOpenAsideUpdate(newValue) {
       this.closeAside = newValue
+      if (window.innerWidth <= 1300) {
+        const htmlElement = document.documentElement
+        htmlElement.classList.add('overflow-hidden')
+      }
       if (window.innerWidth >= 1300) {
         localStorage.setItem('closeAside', newValue)
       }
@@ -43,6 +47,10 @@ export default defineComponent({
 
     handleOverlayAsideClick() {
       this.closeAside = !this.closeAside
+      if (window.innerWidth <= 1300) {
+        const htmlElement = document.documentElement
+        htmlElement.classList.remove('overflow-hidden')
+      }
     },
     handleResize() {
       if (window.innerWidth > 1300) {
