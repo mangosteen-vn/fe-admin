@@ -3,10 +3,12 @@ import { defineComponent } from 'vue'
 import UserDropdown from '@/components/admin/header/user-dropdown/index.vue'
 import { useUserStore } from '@/stores/user'
 import { onMounted } from 'vue'
+import IconSearch from '@/components/icons/header/IconSearch.vue'
+import IconMenu from '@/components/icons/header/IconMenu.vue'
 
 export default defineComponent({
   name: 'Header',
-  components: { UserDropdown },
+  components: { IconMenu, IconSearch, UserDropdown },
   props: ['openAside'],
   methods: {
     toggleOpenAside() {
@@ -20,14 +22,14 @@ export default defineComponent({
     <div class="nav-bar">
       <div class="nav-bar-container d-flex align-items-center justify-content-between">
         <div class="nav-bar__left">
-          <v-btn density="comfortable" icon variant="text" @click="toggleOpenAside">
+          <v-btn class="me-1" density="comfortable" icon variant="text" @click="toggleOpenAside">
             <template v-slot:default>
-              <img alt="" src="@/assets/images/header/menu.svg" />
+              <IconMenu :openAside="openAside"></IconMenu>
             </template>
           </v-btn>
           <v-btn density="comfortable" icon variant="text">
             <template v-slot:default>
-              <img alt="" src="@/assets/images/header/search.svg" />
+              <IconSearch></IconSearch>
             </template>
           </v-btn>
         </div>

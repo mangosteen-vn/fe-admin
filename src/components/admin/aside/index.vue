@@ -5,19 +5,55 @@ import IconMail from '@/components/icons/aside/menu/IconMail.vue'
 import IconArrow from '@/components/icons/aside/menu/IconArrow.vue'
 import IconList from '@/components/icons/aside/menu/IconList.vue'
 import IconDrash from '@/components/icons/aside/menu/IconDrash.vue'
+import IconDashboard from '@/components/icons/aside/menu/IconDashboard.vue'
+import IconDocumentation from '@/components/icons/aside/menu/IconDocumentation.vue'
+import CollapseTransition from '@ivanv/vue-collapse-transition/src/CollapseTransition.vue'
+import IconUsers from '@/components/icons/aside/menu/IconUsers.vue'
+import IconProduct from '@/components/icons/aside/menu/IconProduct.vue'
+import IconPost from '@/components/icons/aside/menu/IconPost.vue'
+import IconSupport from '@/components/icons/aside/menu/IconSupport.vue'
 
 export default defineComponent({
   name: 'Aside',
-  components: { IconDrash, IconList, IconArrow, IconMail, IconPinia },
+  components: {
+    IconDrash,
+    IconList,
+    IconArrow,
+    IconMail,
+    IconPinia,
+    IconDashboard,
+    IconDocumentation,
+    CollapseTransition,
+    IconUsers,
+    IconProduct,
+    IconPost,
+    IconSupport
+  },
   data() {
     return {
       menuItems: [
         {
-          title: 'Email',
-          iconComponent: 'IconMail',
-          isActive: true,
-          link: '/admin/hehe',
-          type: 'link'
+          title: 'Dashboard',
+          iconComponent: 'IconDashboard',
+          isActive: false,
+          link: '',
+          type: 'group',
+          isOpen: false,
+
+          children: [
+            {
+              title: 'Analytics',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/dashboard'
+            },
+            {
+              title: 'Analytics',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/analytics'
+            }
+          ]
         },
         {
           title: 'App & Page',
@@ -26,25 +62,70 @@ export default defineComponent({
           type: 'title'
         },
         {
-          title: 'Invoice',
-          iconComponent: 'IconMail',
+          title: 'Product',
+          iconComponent: 'IconProduct',
           isActive: false,
           link: '',
           type: 'group',
           isOpen: false,
-
           children: [
             {
-              title: 'Email',
+              title: 'Category',
               icon: 'IconList',
               isActive: false,
-              link: '/admin/dashboard'
+              link: '/admin/product/category'
+            },
+            {
+              title: 'List',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/product'
+            },
+            {
+              title: 'View',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/view'
             }
           ]
         },
         {
-          title: 'Invoice',
+          title: 'Post',
+          iconComponent: 'IconPost',
+          isActive: false,
+          link: '',
+          type: 'group',
+          isOpen: false,
+          children: [
+            {
+              title: 'Category',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/post/category'
+            },
+            {
+              title: 'List',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/post'
+            },
+            {
+              title: 'View',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/view'
+            }
+          ]
+        },
+        {
+          title: 'Authorize',
           iconComponent: 'IconMail',
+          link: '',
+          type: 'title'
+        },
+        {
+          title: 'Users',
+          iconComponent: 'IconUsers',
           isActive: false,
           link: '',
           type: 'group',
@@ -52,12 +133,40 @@ export default defineComponent({
 
           children: [
             {
-              title: 'Email',
+              title: 'List',
               icon: 'IconList',
-              isActive: true,
-              link: '/admin/him'
+              isActive: false,
+              link: '/admin/user'
+            },
+            {
+              title: 'View',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/user'
             }
           ]
+        },
+        {
+          title: 'Others',
+          iconComponent: 'IconMail',
+          link: '',
+          type: 'title'
+        },
+        {
+          title: 'Documentation',
+          iconComponent: 'IconDocumentation',
+          isActive: false,
+          link: '/admin/documentation',
+          type: 'link',
+          isOpen: false
+        },
+        {
+          title: 'Raise Support',
+          iconComponent: 'IconSupport',
+          isActive: false,
+          link: '/admin/support',
+          type: 'link',
+          isOpen: false
         }
       ]
     }
@@ -65,12 +174,19 @@ export default defineComponent({
   methods: {
     isActiveRoute(link) {
       return this.$route.path === link
+    },
+    toggleOpen(item) {
+      item.isOpen = !item.isOpen
     }
   },
   created() {
+    const routePath = this.$route.path
     this.menuItems.forEach((menuItem) => {
       if (menuItem.type === 'group') {
-        menuItem.isActive = menuItem.children.some((child) => child.link === this.$route.path)
+        const hasActiveChild =
+          menuItem.children.find((child) => child.link === routePath) !== undefined
+        menuItem.isActive = hasActiveChild
+        menuItem.isOpen = hasActiveChild
       }
     })
   }
@@ -109,41 +225,40 @@ export default defineComponent({
         <template v-if="menuItem.type === 'group'">
           <a
             class="nav-group__label"
-            data-bs-toggle="collapse"
-            :href="'#navCollapse' + index"
-            role="button"
-            aria-expanded="false"
-            :aria-controls="'#navCollapse' + index"
-            :class="{ collapsed: menuItem.isActive }"
+            :class="{ open: menuItem.isActive }"
+            @click="toggleOpen(menuItem)"
           >
             <component :is="menuItem.iconComponent" class="nav-item__link__icon"></component>
             <span class="nav-group__label__title">{{ menuItem.title }}</span>
             <IconArrow class="nav-group__label__arrow"></IconArrow>
           </a>
-          <ul
-            class="nav-group-children collapse"
-            :class="{ show: menuItem.isActive }"
-            :id="'navCollapse' + index"
-          >
-            <li
-              v-for="menuItemChildren of menuItem.children"
-              :key="menuItemChildren.title"
-              class="nav-item"
+          <collapse-transition>
+            <ul
+              class="nav-group-children"
+              v-show="menuItem.isOpen"
+              :class="{ show: menuItem.isActive }"
+              :id="'navCollapse' + index"
             >
-              <router-link
-                class="nav-item__link"
-                :to="menuItemChildren.link"
-                :class="{ 'router-link-active': isActiveRoute(menuItemChildren.link) }"
+              <li
+                v-for="menuItemChildren of menuItem.children"
+                :key="menuItemChildren.title"
+                class="nav-item"
               >
-                <IconList class="nav-item__link__icon"></IconList>
-                <span class="nav-item__link__title"> {{ menuItemChildren.title }} </span>
-              </router-link>
-            </li>
-          </ul>
+                <router-link
+                  class="nav-item__link"
+                  :to="menuItemChildren.link"
+                  :class="{ 'router-link-active': isActiveRoute(menuItemChildren.link) }"
+                >
+                  <IconList class="nav-item__link__icon"></IconList>
+                  <span class="nav-item__link__title"> {{ menuItemChildren.title }} </span>
+                </router-link>
+              </li>
+            </ul>
+          </collapse-transition>
         </template>
         <template v-if="menuItem.type === 'title'">
           <div class="title-wrapper">
-            <span class="title-text">App & Page</span>
+            <span class="title-text">{{ menuItem.title }}</span>
             <IconDrash class="nav-title__icon"></IconDrash>
           </div>
         </template>
@@ -152,253 +267,5 @@ export default defineComponent({
   </aside>
 </template>
 <style lang="scss" scoped>
-.aside {
-  background: var(--bs-white);
-  box-shadow: 0 2px 6px rgba(47, 43, 61, 0.14), 0 0 transparent, 0 0 transparent;
-  z-index: 9999;
-
-  &__logo {
-    margin: 0 14px;
-    padding: 16px 12px;
-  }
-
-  &__menu {
-    padding: 0;
-
-    .nav-item {
-      list-style: none;
-      margin-bottom: 4px;
-
-      &__link {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        position: relative;
-        margin-block: 0;
-        margin-inline: 0.875rem;
-        padding-block: 0;
-        padding-inline: 0.75rem;
-        white-space: nowrap;
-        border-radius: 6.4px;
-        block-size: 2.375rem;
-
-        &:hover {
-          &::before {
-            opacity: calc(0.04 * 1);
-          }
-        }
-
-        &::before {
-          position: absolute;
-          border-radius: inherit;
-          block-size: 100%;
-          content: '';
-          inline-size: 100%;
-          background-color: rgba(var(--nav-link-inerhit), 0.68);
-          inset: 0;
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        &.router-link-active {
-          background: linear-gradient(
-            72.47deg,
-            rgb(115, 103, 240) 22.16%,
-            rgba(115, 103, 240, 0.7) 76.47%
-          ) !important;
-          box-shadow: 0 2px 6px rgba(115, 103, 240, 0.48);
-          font-weight: 500;
-
-          .nav-item__link__icon {
-            stroke: var(--bs-white);
-          }
-
-          .nav-item__link__title {
-            color: var(--bs-white);
-            font-weight: 600;
-          }
-        }
-
-        &__icon {
-          width: 22px !important;
-          height: 22px !important;
-          stroke: rgba(var(--nav-link-inerhit), 0.68);
-          flex-shrink: 0;
-          margin-inline-start: 0.3rem;
-          margin-inline-end: 0.5rem;
-        }
-
-        &__title {
-          color: rgba(var(--nav-link-inerhit), 0.68);
-          font-weight: 500;
-          white-space: nowrap;
-        }
-      }
-    }
-
-    .nav-group {
-      @extend .nav-item;
-      margin-bottom: 0;
-
-      &__label {
-        @extend .nav-item__link;
-        cursor: pointer;
-        margin-bottom: 4px;
-
-        &__icon {
-          @extend .nav-item__link__icon;
-        }
-
-        &__title {
-          @extend .nav-item__link__title;
-          margin-inline-end: auto;
-        }
-
-        &__arrow {
-          width: 16px;
-          height: 16px;
-          stroke: rgba(var(--nav-link-inerhit), 0.68);
-        }
-      }
-
-      &.active {
-        .nav-group__label {
-          &::before {
-            opacity: calc(0.055 * 1);
-            background-color: rgba(var(--nav-link-inerhit), 0.78);
-          }
-        }
-      }
-
-      &-children {
-        padding-left: 0;
-        .nav-item__link__icon {
-          width: 10px !important;
-          height: 10px !important;
-          margin-right: 12px;
-        }
-      }
-    }
-
-    .nav-title {
-      text-transform: uppercase;
-      margin: 20px 14px 6px 14px;
-      padding: 0 12px;
-      letter-spacing: 0.4px;
-      list-style: none;
-
-      .title-wrapper {
-        .title-text {
-          font-size: 12px;
-          color: rgba(var(--nav-link-inerhit) 0.42);
-          width: auto;
-          white-space: nowrap;
-        }
-      }
-
-      &__icon {
-        display: none;
-        stroke: rgba(var(--nav-link-inerhit), 0.42);
-      }
-    }
-  }
-
-  &.close {
-    .aside__logo__branch {
-      width: 0;
-      overflow: hidden;
-      visibility: hidden;
-      transition: 1s;
-      transform: translateX(-1px);
-    }
-
-    .nav-item {
-      .nav-item__link__title {
-        overflow: hidden;
-        display: none;
-        transition: 1s;
-      }
-    }
-
-    .nav-title {
-      .title-wrapper {
-        .title-text {
-          width: 0;
-          overflow: hidden;
-          visibility: hidden;
-          transform: translateX(-1px);
-          display: none;
-          transition: 0.5s;
-        }
-      }
-
-      &__icon {
-        display: block;
-        margin-inline-start: 0.3rem;
-        stroke: rgba(var(--nav-link-inerhit), 0.42);
-      }
-    }
-
-    .nav-group {
-      &__label {
-        &__title {
-          width: 0;
-          overflow: hidden;
-          visibility: hidden;
-          transform: translateX(-1px);
-          transition: 1s;
-        }
-
-        &__arrow {
-          display: none;
-        }
-      }
-    }
-  }
-}
-
-$xs: 0;
-$sm: 576px;
-$md: 768px;
-$lg: 992px;
-$xl: 1200px;
-$xll: 1300px;
-$xxl: 1400px;
-@media screen and (min-width: $xll) {
-  .aside {
-    &.close {
-      .nav-group {
-        &:hover {
-          .nav-group-children {
-            opacity: 1;
-            visibility: visible;
-            transition: 0.4s;
-          }
-        }
-        position: relative;
-        &-children {
-          display: block;
-          opacity: 0;
-          visibility: hidden;
-          background-color: var(--bs-white);
-          position: absolute;
-          left: 100%;
-          margin-left: 2px;
-          padding: 12px 0 8px 0;
-          top: 0;
-          transition: 0.4s;
-          border-radius: 6px;
-          box-shadow: 0 2px 6px rgba(47, 43, 61, 0.14), 0 0 transparent, 0 0 transparent !important;
-
-          .nav-item {
-            &__link__title {
-              width: 160px;
-              display: block !important;
-            }
-          }
-        }
-      }
-    }
-  }
-}
+@import '@/assets/scss/aside/aside';
 </style>
