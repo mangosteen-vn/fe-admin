@@ -1,47 +1,24 @@
 <script>
+
+import TitleEditor from "@/components/admin/qilleditor/TitleEditor.vue";
+
 export default {
-  name: 'DashboardView'
+  name: 'DashboardView',
+    components: {TitleEditor},
+    methods:{
+     handleChangeName(name){
+            console.log(name)
+        }
+    }
 }
 </script>
 <template>
-  <div>
-    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus deserunt dolorum eius eos
-    inventore laudantium maiores maxime, necessitatibus nesciunt non odio perspiciatis provident
-    quae quo, sapiente soluta vero vitae voluptate. Lorem ipsum dolor sit amet, consectetur
-    adipisicing elit. Accusamus deserunt dolorum eius eos inventore laudantium maiores maxime,
-    necessitatibus nesciunt non odio perspiciatis provident quae quo, sapiente soluta vero vitae
-    voluptate. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus deserunt dolorum
-    eius eos inventore laudantium maiores maxime, necessitatibus nesciunt non odio perspiciatis
-    provident quae quo, sapiente soluta vero vitae voluptate. Lorem ipsum dolor sit amet,
-    consectetur adipisicing elit. Accusamus deserunt dolorum eius eos inventore laudantium maiores
-    maxime, necessitatibus nesciunt non odio perspiciatis provident quae quo, sapiente soluta vero
-    vitae voluptate. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus deserunt
-    dolorum eius eos inventore laudantium maiores maxime, necessitatibus nesciunt non odio
-    perspiciatis provident quae quo, sapiente soluta vero vitae voluptate. Lorem ipsum dolor sit
-    amet, consectetur adipisicing elit. Accusamus deserunt dolorum eius eos inventore laudantium
-    maiores maxime, necessitatibus nesciunt non odio perspiciatis provident quae quo, sapiente
-    soluta vero vitae voluptate. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus
-    deserunt dolorum eius eos inventore laudantium maiores maxime, necessitatibus nesciunt non odio
-    perspiciatis provident quae quo, sapiente soluta vero vitae voluptate. Lorem ipsum dolor sit
-    amet, consectetur adipisicing elit. Accusamus deserunt dolorum eius eos inventore laudantium
-    maiores maxime, necessitatibus nesciunt non odio perspiciatis provident quae quo, sapiente
-    soluta vero vitae voluptate. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus
-    deserunt dolorum eius eos inventore laudantium maiores maxime, necessitatibus nesciunt non odio
-    perspiciatis provident quae quo, sapiente soluta vero vitae voluptate. Lorem ipsum dolor sit
-    amet, consectetur adipisicing elit. Accusamus deserunt dolorum eius eos inventore laudantium
-    maiores maxime, necessitatibus nesciunt non odio perspiciatis provident quae quo, sapiente
-    soluta vero vitae voluptate. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus
-    deserunt dolorum eius eos inventore laudantium maiores maxime, necessitatibus nesciunt non odio
-    perspiciatis provident quae quo, sapiente soluta vero vitae voluptate. Lorem ipsum dolor sit
-    amet, consectetur adipisicing elit. Accusamus deserunt dolorum eius eos inventore laudantium
-    maiores maxime, necessitatibus nesciunt non odio perspiciatis provident quae quo, sapiente
-    soluta vero vitae voluptate. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus
-    deserunt dolorum eius eos inventore laudantium maiores maxime, necessitatibus nesciunt non odio
-    perspiciatis provident quae quo, sapiente soluta vero vitae voluptate. Lorem ipsum dolor sit
-    amet, consectetur adipisicing elit. Accusamus deserunt dolorum eius eos inventore laudantium
-    maiores maxime, necessitatibus nesciunt non odio perspiciatis provident quae quo, sapiente
-    soluta vero vitae voluptate. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus
-    deserunt dolorum eius eos inventore laudantium maiores maxime, necessitatibus nesciunt non odio
-    perspiciatis provident quae quo, sapiente soluta vero vitae voluptate.
-  </div>
+ <div class="p-3 bg-white">
+  <form>
+  <TitleEditor :title="'Product Name'" @changeValue="handleChangeName" :placeholder="'Typing'" required></TitleEditor>
+   <button type="submit">
+dsadsa
+   </button>
+  </form>
+ </div>
 </template>

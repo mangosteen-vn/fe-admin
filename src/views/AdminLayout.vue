@@ -173,7 +173,7 @@ $xxl: 1400px;
 
     aside {
       width: 260px;
-      left: -100%;
+      left: -260px;
     }
 
     &.open {
