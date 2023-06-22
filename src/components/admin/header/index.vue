@@ -1,13 +1,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import UserDropdown from '@/components/admin/header/user-dropdown/index.vue'
-import { useUserStore } from '@/stores/user'
-import { onMounted } from 'vue'
 import IconSearch from '@/components/icons/header/IconSearch.vue'
 import IconMenu from '@/components/icons/header/IconMenu.vue'
 
 export default defineComponent({
-  name: 'Header',
+  name: 'HeaderAdmin',
   components: { IconMenu, IconSearch, UserDropdown },
   props: ['openAside'],
   methods: {
@@ -47,7 +45,7 @@ header {
   padding: 16px 24px 0 24px;
   max-inline-size: 1440px;
   margin: auto;
-  z-index: 99999;
+  z-index: 9;
 
   &:before {
     content: '';
