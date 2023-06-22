@@ -14,7 +14,7 @@ import IconPost from '@/components/icons/aside/menu/IconPost.vue'
 import IconSupport from '@/components/icons/aside/menu/IconSupport.vue'
 
 export default defineComponent({
-  name: 'Aside',
+  name: 'AsideAdmin',
   components: {
     IconDrash,
     IconList,
@@ -79,13 +79,13 @@ export default defineComponent({
               title: 'List',
               icon: 'IconList',
               isActive: false,
-              link: '/admin/product'
+              link: '/admin/product/list'
             },
             {
-              title: 'View',
+              title: 'Create',
               icon: 'IconList',
               isActive: false,
-              link: '/admin/view'
+              link: '/admin/product/create'
             }
           ]
         },
@@ -107,7 +107,7 @@ export default defineComponent({
               title: 'List',
               icon: 'IconList',
               isActive: false,
-              link: '/admin/post'
+              link: '/admin/post/list'
             },
             {
               title: 'View',
@@ -130,7 +130,6 @@ export default defineComponent({
           link: '',
           type: 'group',
           isOpen: false,
-
           children: [
             {
               title: 'List',
@@ -172,23 +171,29 @@ export default defineComponent({
     }
   },
   methods: {
-    isActiveRoute(link) {
+    isActiveRoute(link: any) {
       return this.$route.path === link
     },
-    toggleOpen(item) {
+    toggleOpen(item: { isOpen: boolean }) {
+      this.menuItems.forEach((menuItem) => {
+        menuItem.isActive = false
+      })
       item.isOpen = !item.isOpen
+      item.isActive = item.isOpen
     }
   },
-  created() {
+  mounted() {
     const routePath = this.$route.path
-    this.menuItems.forEach((menuItem) => {
-      if (menuItem.type === 'group') {
-        const hasActiveChild =
-          menuItem.children.find((child) => child.link === routePath) !== undefined
-        menuItem.isActive = hasActiveChild
-        menuItem.isOpen = hasActiveChild
+    this.menuItems.forEach(
+      (menuItem: { type: string; children: any[]; isActive: boolean; isOpen: boolean }) => {
+        if (menuItem.type === 'group') {
+          const hasActiveChild =
+            menuItem.children.find((child: string) => child.link === routePath) !== undefined
+          menuItem.isActive = hasActiveChild
+          menuItem.isOpen = hasActiveChild
+        }
       }
-    })
+    )
   }
 })
 </script>

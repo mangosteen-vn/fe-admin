@@ -18,7 +18,7 @@ export default defineComponent({
     const toast = useToast()
     const signOut = async () => {
       await authStore.signOut()
-      router.push('/sign-in')
+      await router.push('/sign-in')
       toast.success('You are now logged out.')
     }
     onMounted(() => {

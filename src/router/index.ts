@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createRouter, createWebHistory } from 'vue-router'
 // @ts-ignore
 import HomeView from '../views/HomeView.vue'
@@ -11,7 +12,8 @@ import ForGotPassword from '@/components/method-authentication/ForgotPassword.vu
 import AdminLayout from '@/views/AdminLayout.vue'
 // @ts-ignore
 import DashboardView from '@/components/admin/dashboard/index.vue'
-import { useUserStore } from '@/stores/user'
+import ListProduct from '@/components/admin/product/list/index.vue'
+import CreateProduct from '@/components/admin/product/create/index.vue'
 
 // @ts-ignore
 const router = createRouter({
@@ -47,6 +49,19 @@ const router = createRouter({
         {
           path: 'dashboard',
           component: DashboardView
+        },
+        {
+          path: 'product',
+          children: [
+            {
+              path: 'list',
+              component: ListProduct
+            },
+            {
+              path: 'create',
+              component: CreateProduct
+            }
+          ]
         }
       ]
     }
