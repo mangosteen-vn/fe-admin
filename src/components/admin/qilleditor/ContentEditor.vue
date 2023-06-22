@@ -1,6 +1,12 @@
 <script>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import BlotFormatter from 'quill-blot-formatter'
+import Autoformat from "quill-autoformat/src/modules/autoformat";
+import ImageCompress from 'quill-image-compress';
+import { ImageDrop } from 'quill-image-drop-module';
+import MagicUrl from 'quill-magic-url'
+import MarkdownShortcuts from 'quill-markdown-shortcuts';
 
 export default {
   components: {
@@ -28,6 +34,7 @@ export default {
       options: {
         placeholder: this.placeholder || '',
         modules: {
+
         }
       },
       focused: false
@@ -40,7 +47,37 @@ export default {
     handleBlur() {
       this.focused = false
     }
-  }
+  },
+  setup: () => {
+    const modules = [
+      {
+      name: 'blotFormatter',
+      module: BlotFormatter,
+      options: {/* options */}
+    },{
+        name: 'autoFormat',
+        module: Autoformat,
+        options: {/* options */}
+      },{
+        name: 'imageCompress',
+        module: ImageCompress,
+        options: {/* options */}
+      },{
+        name: 'imageDrop',
+        module: ImageDrop,
+        options: {/* options */}
+      },{
+        name: 'magicUrl',
+        module: MagicUrl,
+        options: {/* options */}
+      },{
+        name: 'markdownShortcuts',
+        module: MarkdownShortcuts,
+        options: {/* options */}
+      },
+    ]
+    return { modules }
+  },
 }
 </script>
 <template>
@@ -48,7 +85,7 @@ export default {
     <label :for="labelFor" class="mangosteen-content-editor__label form-label"
       >{{ title }} <span v-show="required" class="text-red-accent-3">*</span></label
     >
-    <QuillEditor @blur="handleBlur" @focus="handleFocus" theme="snow" :options="options" toolbar="full" />
+    <QuillEditor @blur="handleBlur" @focus="handleFocus" theme="snow" :modules="modules" :options="options" toolbar="full" />
   </div>
 </template>
 <style lang="scss">
@@ -92,7 +129,7 @@ export default {
   .ql-container {
     font-family: 'Quicksand', sans-serif !important;
     font-size: 16px;
-    height: 200px;
+    height: 600px;
     color: rgba(var(--nav-link-inerhit), 0.78);
     border: 1px solid var(--blue-grey-lighten-3);
     border-top-width: 0 !important;
