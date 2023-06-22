@@ -2,11 +2,11 @@
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import BlotFormatter from 'quill-blot-formatter'
-import Autoformat from "quill-autoformat/src/modules/autoformat";
-import ImageCompress from 'quill-image-compress';
-import { ImageDrop } from 'quill-image-drop-module';
+import Autoformat from 'quill-autoformat/src/modules/autoformat'
+import ImageCompress from 'quill-image-compress'
+import { ImageDrop } from 'quill-image-drop-module'
 import MagicUrl from 'quill-magic-url'
-import MarkdownShortcuts from 'quill-markdown-shortcuts';
+import MarkdownShortcuts from 'quill-markdown-shortcuts'
 
 export default {
   components: {
@@ -33,9 +33,7 @@ export default {
     return {
       options: {
         placeholder: this.placeholder || '',
-        modules: {
-
-        }
+        modules: {}
       },
       focused: false
     }
@@ -51,33 +49,50 @@ export default {
   setup: () => {
     const modules = [
       {
-      name: 'blotFormatter',
-      module: BlotFormatter,
-      options: {/* options */}
-    },{
+        name: 'blotFormatter',
+        module: BlotFormatter,
+        options: {
+          /* options */
+        }
+      },
+      {
         name: 'autoFormat',
         module: Autoformat,
-        options: {/* options */}
-      },{
+        options: {
+          /* options */
+        }
+      },
+      {
         name: 'imageCompress',
         module: ImageCompress,
-        options: {/* options */}
-      },{
+        options: {
+          /* options */
+        }
+      },
+      {
         name: 'imageDrop',
         module: ImageDrop,
-        options: {/* options */}
-      },{
+        options: {
+          /* options */
+        }
+      },
+      {
         name: 'magicUrl',
         module: MagicUrl,
-        options: {/* options */}
-      },{
+        options: {
+          /* options */
+        }
+      },
+      {
         name: 'markdownShortcuts',
         module: MarkdownShortcuts,
-        options: {/* options */}
-      },
+        options: {
+          /* options */
+        }
+      }
     ]
     return { modules }
-  },
+  }
 }
 </script>
 <template>
@@ -85,7 +100,14 @@ export default {
     <label :for="labelFor" class="mangosteen-content-editor__label form-label"
       >{{ title }} <span v-show="required" class="text-red-accent-3">*</span></label
     >
-    <QuillEditor @blur="handleBlur" @focus="handleFocus" theme="snow" :modules="modules" :options="options" toolbar="full" />
+    <QuillEditor
+      @blur="handleBlur"
+      @focus="handleFocus"
+      theme="snow"
+      :modules="modules"
+      :options="options"
+      toolbar="full"
+    />
   </div>
 </template>
 <style lang="scss">
