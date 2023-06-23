@@ -33,7 +33,9 @@ export default {
     return {
       options: {
         placeholder: this.placeholder || '',
-        modules: {}
+        modules: {
+          toolbar: [['markdown']]
+        }
       },
       focused: false
     }
