@@ -59,7 +59,7 @@ export default {
 .mangosteen-title-editor {
   position: relative;
   &__label {
-    margin-bottom: 4px;
+    //margin-bottom: 4px;
     font-size: 14px;
     color: rgba(var(--nav-link-inerhit), 0.78);
   }
