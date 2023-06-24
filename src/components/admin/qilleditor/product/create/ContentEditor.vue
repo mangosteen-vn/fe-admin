@@ -7,27 +7,18 @@ import ImageCompress from 'quill-image-compress'
 import { ImageDrop } from 'quill-image-drop-module'
 import MagicUrl from 'quill-magic-url'
 import MarkdownShortcuts from 'quill-markdown-shortcuts'
+import ImageUploader from 'quill-image-uploader'
+import { uploadImage } from '@/utils/file'
 
 export default {
   components: {
     QuillEditor
   },
   props: {
-    labelFor: {
-      type: String
-    },
-    title: {
-      type: String
-    },
-    placeholder: {
-      type: String
-    },
-    value: {
-      type: String
-    },
-    required: {
-      type: Boolean
-    }
+    labelFor: String,
+    title: String,
+    placeholder: String,
+    required: Boolean
   },
   data() {
     return {
@@ -37,7 +28,14 @@ export default {
           toolbar: [['markdown']]
         }
       },
+      content: null,
       focused: false
+    }
+  },
+  mounted() {
+    const contentUnsaved = localStorage.getItem('productContentUnsaved')
+    if (contentUnsaved) {
+      this.content = contentUnsaved
     }
   },
   methods: {
@@ -46,6 +44,10 @@ export default {
     },
     handleBlur() {
       this.focused = false
+    },
+    handleUpdateContent(newContent) {
+      this.$emit('updateContent', newContent)
+      localStorage.setItem('productContentUnsaved', newContent)
     }
   },
   setup: () => {
@@ -57,6 +59,7 @@ export default {
           /* options */
         }
       },
+
       {
         name: 'autoFormat',
         module: Autoformat,
@@ -91,6 +94,27 @@ export default {
         options: {
           /* options */
         }
+      },
+      {
+        name: 'imageUploader',
+        module: ImageUploader,
+        options: {
+          upload: (file) => {
+            return new Promise((resolve, reject) => {
+              const formData = new FormData()
+              formData.append('image', file)
+              console.log(formData)
+              uploadImage(formData)
+                .then((webpPath) => {
+                  resolve(webpPath)
+                })
+                .catch((error) => {
+                  reject('Upload failed')
+                  console.error('Error:', error)
+                })
+            })
+          }
+        }
       }
     ]
     return { modules }
@@ -106,8 +130,11 @@ export default {
       @blur="handleBlur"
       @focus="handleFocus"
       theme="snow"
+      v-model:content="content"
+      @update:content="handleUpdateContent"
       :modules="modules"
       :options="options"
+      contentType="html"
       toolbar="full"
     />
   </div>

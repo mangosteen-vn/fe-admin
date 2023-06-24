@@ -1,27 +1,17 @@
 <script>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import BlotFormatter from 'quill-blot-formatter'
 
 export default {
   components: {
     QuillEditor
   },
   props: {
-    labelFor: {
-      type: String
-    },
-    title: {
-      type: String
-    },
-    placeholder: {
-      type: String
-    },
-    value: {
-      type: String
-    },
-    required: {
-      type: Boolean
-    }
+    labelFor: String,
+    title: String,
+    placeholder: String,
+    required: Boolean
   },
   data() {
     return {
@@ -36,8 +26,21 @@ export default {
           ]
         }
       },
-      focused: false
+      focused: false,
+      content: null
     }
+  },
+  setup: () => {
+    const modules = [
+      {
+        name: 'blotFormatter',
+        module: BlotFormatter,
+        options: {
+          /* options */
+        }
+      }
+    ]
+    return { modules }
   },
   methods: {
     handleFocus() {
@@ -45,6 +48,16 @@ export default {
     },
     handleBlur() {
       this.focused = false
+    },
+    handleUpdateContent(newContent) {
+      this.$emit('updateContent', newContent)
+      localStorage.setItem('productDescriptionUnsaved', newContent)
+    }
+  },
+  mounted() {
+    const contentUnsaved = localStorage.getItem('productDescriptionUnsaved')
+    if (contentUnsaved) {
+      this.content = contentUnsaved
     }
   }
 }
@@ -54,7 +67,16 @@ export default {
     <label :for="labelFor" class="mangosteen-description-details-editor__label form-label"
       >{{ title }} <span v-show="required" class="text-red-accent-3">*</span></label
     >
-    <QuillEditor @blur="handleBlur" @focus="handleFocus" theme="snow" :options="options" />
+    <QuillEditor
+      v-model:content="content"
+      :options="options"
+      :modules="modules"
+      theme="snow"
+      @blur="handleBlur"
+      @focus="handleFocus"
+      contentType="html"
+      @update:content="handleUpdateContent"
+    />
   </div>
 </template>
 <style lang="scss">
@@ -109,6 +131,7 @@ export default {
       &.ql-blank {
         &::before {
           transition: 0.4s;
+          color: rgba(var(--nav-link-inerhit), 0.48);
         }
       }
     }

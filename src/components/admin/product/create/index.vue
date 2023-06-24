@@ -1,10 +1,10 @@
 <script>
-import TitleEditor from '@/components/admin/qilleditor/TitleEditor.vue'
-import SeoEditor from '@/components/admin/qilleditor/SeoEditor.vue'
-import DescriptionEditor from '@/components/admin/qilleditor/DescriptionEditor.vue'
-import ContentEditor from '@/components/admin/qilleditor/ContentEditor.vue'
-import ThumbnailEditor from '@/components/admin/qilleditor/ThumbnailEditor.vue'
-import GalleryEditor from '@/components/admin/qilleditor/GalleryEditor.vue'
+import TitleEditor from '@/components/admin/qilleditor/product/create/TitleEditor.vue'
+import SeoEditor from '@/components/admin/qilleditor/product/create/SeoEditor.vue'
+import DescriptionEditor from '@/components/admin/qilleditor/product/create/DescriptionEditor.vue'
+import ContentEditor from '@/components/admin/qilleditor/product/create/ContentEditor.vue'
+import ThumbnailEditor from '@/components/admin/qilleditor/product/create/ThumbnailEditor.vue'
+import GalleryEditor from '@/components/admin/qilleditor/product/create/GalleryEditor.vue'
 
 export default {
   name: 'DashboardView',
@@ -17,8 +17,11 @@ export default {
     TitleEditor
   },
   methods: {
-    handleChangeName(name) {
-      console.log(name)
+    handleChangeName(newName) {
+      console.log(newName)
+    },
+    handleChangeContent(newContent) {
+      console.log(newContent)
     }
   }
 }
@@ -33,33 +36,37 @@ export default {
         <div class="col">
           <ThumbnailEditor></ThumbnailEditor>
           <GalleryEditor class="mt-4"></GalleryEditor>
-          <!--          <SeoEditor-->
-          <!--            :labelFor="'seo-keyword'"-->
-          <!--            :placeholder="'Typing'"-->
-          <!--            :title="'Seo Keyword'"-->
-          <!--            class="mt-4"-->
-          <!--            required-->
-          <!--            @changeValue="handleChangeName"-->
-          <!--          ></SeoEditor>-->
         </div>
         <div class="col">
           <TitleEditor
             class="mt-4 mt-lg-0"
             :labelFor="'title'"
-            :placeholder="'Typing'"
-            :title="'Product Name & Seo title'"
+            :placeholder="'Enter the product name ...'"
+            :title="'Product Name & Seo Title'"
+            required
+            @updateContent="handleChangeName"
+          ></TitleEditor>
+          <SeoEditor
+            :labelFor="'seo-keyword'"
+            :placeholder="'Enter the product SEO Keyword'"
+            :title="'SEO Keyword of Product'"
+            class="mt-4"
             required
             @changeValue="handleChangeName"
-          ></TitleEditor>
-
+          ></SeoEditor>
           <DescriptionEditor
-            :placeholder="'Typing'"
-            :title="'Description'"
+            :placeholder="'Enter the product description ...'"
+            :title="'Product Description'"
             class="mt-4"
           ></DescriptionEditor>
         </div>
       </div>
-      <ContentEditor :placeholder="'Typing'" :title="'Content'" class="mt-4"></ContentEditor>
+      <ContentEditor
+        @updateContent="handleChangeContent"
+        :placeholder="'Enter the product content ...'"
+        :title="'Product Content'"
+        class="mt-4"
+      ></ContentEditor>
       <button type="submit"></button>
     </form>
   </div>
