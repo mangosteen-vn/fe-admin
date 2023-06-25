@@ -1,11 +1,17 @@
 <script>
+import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
+
 export default {
+  components: { DangerAlert },
   props: {
     labelFor: String,
-    title: String,
+    label: String,
     placeholder: String,
-    required: Boolean
+    required: Boolean,
+    message: String,
+    showAlert: Boolean
   },
+
   data() {
     return {
       currentContent: ''
@@ -33,7 +39,7 @@ export default {
 <template>
   <div class="mangosteen-title-editor">
     <label :for="labelFor" class="mangosteen-title-editor__label form-label"
-      >{{ title }} <span v-show="required" class="text-red-accent-3">*</span></label
+      >{{ label }} <span v-show="required" class="text-red-accent-3">*</span></label
     >
     <input
       v-model="currentContent"
@@ -41,9 +47,9 @@ export default {
       class="mangosteen-title-editor__input form-control"
       :id="labelFor"
       :placeholder="placeholder"
-      :required="required"
     />
     <div class="mangosteen-title-editor__count">{{ characterCount }}/255</div>
+    <DangerAlert class="mt-2" :message="message" :show="showAlert"></DangerAlert>
   </div>
 </template>
 <style lang="scss" scoped>

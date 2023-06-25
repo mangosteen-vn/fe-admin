@@ -9,16 +9,20 @@ import MagicUrl from 'quill-magic-url'
 import MarkdownShortcuts from 'quill-markdown-shortcuts'
 import ImageUploader from 'quill-image-uploader'
 import { uploadImage } from '@/utils/file'
+import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
 
 export default {
   components: {
+    DangerAlert,
     QuillEditor
   },
   props: {
     labelFor: String,
-    title: String,
+    label: String,
     placeholder: String,
-    required: Boolean
+    required: Boolean,
+    message: String,
+    showAlert: Boolean
   },
   data() {
     return {
@@ -124,7 +128,7 @@ export default {
 <template>
   <div class="mangosteen-content-editor" :class="{ focused: focused }">
     <label :for="labelFor" class="mangosteen-content-editor__label form-label"
-      >{{ title }} <span v-show="required" class="text-red-accent-3">*</span></label
+      >{{ label }} <span v-show="required" class="text-red-accent-3">*</span></label
     >
     <QuillEditor
       @blur="handleBlur"
@@ -137,6 +141,7 @@ export default {
       contentType="html"
       toolbar="full"
     />
+    <DangerAlert :id="labelFor" :message="message" :show="showAlert" class="mt-2"></DangerAlert>
   </div>
 </template>
 <style lang="scss">

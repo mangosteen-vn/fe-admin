@@ -2,16 +2,20 @@
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import BlotFormatter from 'quill-blot-formatter'
+import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
 
 export default {
   components: {
+    DangerAlert,
     QuillEditor
   },
   props: {
     labelFor: String,
-    title: String,
+    label: String,
     placeholder: String,
-    required: Boolean
+    required: Boolean,
+    message: String,
+    showAlert: Boolean
   },
   data() {
     return {
@@ -65,18 +69,19 @@ export default {
 <template>
   <div class="mangosteen-description-details-editor" :class="{ focused: focused }">
     <label :for="labelFor" class="mangosteen-description-details-editor__label form-label"
-      >{{ title }} <span v-show="required" class="text-red-accent-3">*</span></label
+      >{{ label }} <span v-show="required" class="text-red-accent-3">*</span></label
     >
     <QuillEditor
       v-model:content="content"
-      :options="options"
       :modules="modules"
+      :options="options"
+      contentType="html"
       theme="snow"
       @blur="handleBlur"
       @focus="handleFocus"
-      contentType="html"
       @update:content="handleUpdateContent"
     />
+    <DangerAlert :id="labelFor" :message="message" :show="showAlert" class="mt-2"></DangerAlert>
   </div>
 </template>
 <style lang="scss">
