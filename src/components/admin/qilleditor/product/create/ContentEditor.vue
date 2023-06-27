@@ -128,7 +128,7 @@ export default {
 <template>
   <div class="mangosteen-content-editor" :class="{ focused: focused }">
     <label :for="labelFor" class="mangosteen-content-editor__label form-label"
-      >{{ label }} <span v-show="required" class="text-red-accent-3">*</span></label
+      >{{ label }} <span v-show="required" class="text-blue-grey-lighten-1">(Optional)</span></label
     >
     <QuillEditor
       @blur="handleBlur"
@@ -173,9 +173,10 @@ export default {
   }
   position: relative;
   &__label {
-    margin-bottom: 4px;
+    margin-bottom: 4px !important;
     font-size: 14px;
-    color: rgba(var(--nav-link-inerhit), 0.78);
+    color: var(--bs-black);
+    font-weight: 500;
   }
   .ql-toolbar {
     border: 1px solid var(--blue-grey-lighten-3);
@@ -185,7 +186,7 @@ export default {
   .ql-container {
     font-family: 'Quicksand', sans-serif !important;
     font-size: 16px;
-    height: 600px;
+    height: 500px;
     color: rgba(var(--nav-link-inerhit), 0.78);
     border: 1px solid var(--blue-grey-lighten-3);
     border-top-width: 0 !important;
@@ -196,6 +197,7 @@ export default {
       &.ql-blank {
         &::before {
           transition: 0.4s;
+          color: rgba(var(--nav-link-inerhit), 0.48);
         }
       }
     }

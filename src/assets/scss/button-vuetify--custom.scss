@@ -33,6 +33,13 @@
   height: 38px !important;
   width: 38px !important;
 }
+.mangosteen-collection-editor__select {
+  &.h-40 {
+    .v-field__input {
+      min-height: 40px;
+    }
+  }
+}
 // Reset
 .v-btn {
   letter-spacing: normal;

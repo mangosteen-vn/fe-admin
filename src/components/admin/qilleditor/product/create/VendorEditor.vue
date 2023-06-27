@@ -17,13 +17,13 @@ export default {
       currentContent: ''
     }
   },
-  computed: {
-    characterCount() {
-      return this.currentContent.length
-    }
-  },
   mounted() {
     this.currentContent = localStorage.getItem('productTitleUnsaved') || ''
+  },
+  methods: {
+    validateNumber() {
+      this.currentContent = this.currentContent.replace(/\D/g, '') // Loại bỏ tất cả các ký tự không phải số
+    }
   },
   watch: {
     currentContent(newVal) {
@@ -37,36 +37,27 @@ export default {
 }
 </script>
 <template>
-  <div class="mangosteen-title-editor">
-    <label :for="labelFor" class="mangosteen-title-editor__label form-label"
-      >{{ label }} <span v-show="required" class="text-blue-grey-lighten-1">(Optional)</span></label
-    >
+  <div class="mangosteen-vendor-editor">
+    <label :for="labelFor" class="mangosteen-vendor-editor__label form-label">{{ label }}</label>
     <input
       v-model="currentContent"
       type="text"
-      class="mangosteen-title-editor__input form-control"
+      class="mangosteen-vendor-editor__input form-control"
       :id="labelFor"
       :placeholder="placeholder"
+      @input="validateNumber"
     />
-    <div class="mangosteen-title-editor__count">{{ characterCount }}/255</div>
     <DangerAlert class="mt-2" :message="message" :show="showAlert"></DangerAlert>
   </div>
 </template>
 <style lang="scss" scoped>
-.mangosteen-title-editor {
+.mangosteen-vendor-editor {
   position: relative;
   &__label {
     margin-bottom: 4px;
     font-size: 14px;
     color: var(--bs-black);
     font-weight: 500;
-  }
-  &__count {
-    position: absolute;
-    bottom: 9px;
-    right: 12px;
-    color: rgba(var(--nav-link-inerhit), 0.78) !important;
-    font-size: 14px;
   }
   &__input {
     height: 40px;

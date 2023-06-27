@@ -43,7 +43,6 @@ header {
   position: sticky;
   inset-block-start: 0;
   padding: 16px 24px 0 24px;
-  max-inline-size: 1440px;
   margin: auto;
   z-index: 9;
 

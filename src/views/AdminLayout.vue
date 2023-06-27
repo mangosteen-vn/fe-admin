@@ -112,7 +112,6 @@ export default defineComponent({
   .layout-content-wrapper {
     .v-main {
       padding: 24px 24px 24px 24px;
-      max-inline-size: 1440px;
       margin: auto;
     }
   }

@@ -58,9 +58,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .mangosteen-thumbnail-editor {
   &__label {
-    margin-bottom: 4px;
+    margin-bottom: 4px !important;
     font-size: 14px;
-    color: rgba(var(--nav-link-inerhit), 0.78);
+    color: var(--bs-black);
+    font-weight: 500;
   }
 
   &__img {

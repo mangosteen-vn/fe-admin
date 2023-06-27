@@ -1,6 +1,6 @@
 import apiClient from '@/plugins/axios'
 
-export async function uploadImage(formData: any) {
+export async function uploadImage(formData: any): Promise<string | {}> {
   try {
     const response = await apiClient.post('upload-image', formData, {
       headers: {
