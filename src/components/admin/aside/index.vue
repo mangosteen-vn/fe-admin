@@ -86,6 +86,12 @@ export default defineComponent({
               icon: 'IconList',
               isActive: false,
               link: '/admin/product/create'
+            },
+            {
+              title: 'Config',
+              icon: 'IconList',
+              isActive: false,
+              link: '/admin/product/config'
             }
           ]
         },
@@ -113,7 +119,7 @@ export default defineComponent({
               title: 'View',
               icon: 'IconList',
               isActive: false,
-              link: '/admin/view'
+              link: '/admin/edit'
             }
           ]
         },

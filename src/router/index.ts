@@ -1,3 +1,4 @@
+//@/router/index.ts
 // @ts-ignore
 import { createRouter, createWebHistory } from 'vue-router'
 // @ts-ignore
@@ -14,6 +15,8 @@ import AdminLayout from '@/views/AdminLayout.vue'
 import DashboardView from '@/components/admin/dashboard/index.vue'
 import ListProduct from '@/components/admin/product/list/index.vue'
 import CreateProduct from '@/components/admin/product/create/index.vue'
+import ConfigProduct from '@/components/admin/product/config/index.vue'
+import EditProduct from '@/components/admin/product/edit/index.vue'
 
 // @ts-ignore
 const router = createRouter({
@@ -56,6 +59,14 @@ const router = createRouter({
             {
               path: 'list',
               component: ListProduct
+            },
+            {
+              path: ':id/edit',
+              component: EditProduct
+            },
+            {
+              path: 'config',
+              component: ConfigProduct
             },
             {
               path: 'create',

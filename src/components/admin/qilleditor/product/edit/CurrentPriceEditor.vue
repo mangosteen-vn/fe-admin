@@ -9,7 +9,8 @@ export default {
     placeholder: String,
     required: Boolean,
     message: String,
-    showAlert: Boolean
+    showAlert: Boolean,
+    value: Number
   },
 
   data() {
@@ -17,21 +18,20 @@ export default {
       currentContent: ''
     }
   },
-  mounted() {
-    this.currentContent = localStorage.getItem('productCurrentPriceUnsaved') || ''
-  },
   methods: {
     validateNumber() {
       this.currentContent = this.currentContent.replace(/\D/g, '')
     }
   },
   watch: {
+    value(newVal) {
+      this.currentContent = newVal
+    },
     currentContent(newVal) {
       if (newVal.length > 255) {
         this.currentContent = newVal.slice(0, 255)
       }
       this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productCurrentPriceUnsaved', this.currentContent)
     }
   }
 }

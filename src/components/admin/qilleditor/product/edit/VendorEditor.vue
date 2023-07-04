@@ -9,20 +9,13 @@ export default {
     placeholder: String,
     required: Boolean,
     message: String,
-    showAlert: Boolean
+    showAlert: Boolean,
+    value: Object
   },
 
   data() {
     return {
-      currentContent: ''
-    }
-  },
-  mounted() {
-    this.currentContent = localStorage.getItem('productCurrentPriceUnsaved') || ''
-  },
-  methods: {
-    validateNumber() {
-      this.currentContent = this.currentContent.replace(/\D/g, '')
+      currentContent: this.value || ''
     }
   },
   watch: {
@@ -31,29 +24,25 @@ export default {
         this.currentContent = newVal.slice(0, 255)
       }
       this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productCurrentPriceUnsaved', this.currentContent)
     }
   }
 }
 </script>
 <template>
-  <div class="mangosteen-current-price-editor">
-    <label :for="labelFor" class="mangosteen-current-price-editor__label form-label">{{
-      label
-    }}</label>
+  <div class="mangosteen-vendor-editor">
+    <label :for="labelFor" class="mangosteen-vendor-editor__label form-label">{{ label }}</label>
     <input
       v-model="currentContent"
       type="text"
-      class="mangosteen-current-price-editor__input form-control"
+      class="mangosteen-vendor-editor__input form-control"
       :id="labelFor"
       :placeholder="placeholder"
-      @input="validateNumber"
     />
     <DangerAlert class="mt-2" :message="message" :show="showAlert"></DangerAlert>
   </div>
 </template>
 <style lang="scss" scoped>
-.mangosteen-current-price-editor {
+.mangosteen-vendor-editor {
   position: relative;
   &__label {
     margin-bottom: 4px;

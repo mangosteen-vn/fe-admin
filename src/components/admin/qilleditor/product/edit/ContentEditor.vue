@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, watch } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import BlotFormatter from 'quill-blot-formatter'
@@ -23,7 +23,8 @@ export default defineComponent({
     placeholder: String,
     required: Boolean,
     message: String,
-    showAlert: Boolean
+    showAlert: Boolean,
+    value: String
   },
   setup(props: any, { emit }: any) {
     const content = ref<string | null>(null)
@@ -39,22 +40,22 @@ export default defineComponent({
     const handleFocus = () => {
       focused.value = true
     }
-
-    onMounted(() => {
-      const contentUnsaved = localStorage.getItem('productContentUnsaved')
-      if (contentUnsaved) {
-        content.value = contentUnsaved
-      }
-    })
-
     const handleBlur = () => {
       focused.value = false
     }
 
     const handleUpdateContent = (newContent: string) => {
       emit('updateContent', newContent)
-      localStorage.setItem('productContentUnsaved', newContent)
     }
+
+    watch(
+      () => props.value,
+      (newVal: null) => {
+        if (newVal !== null) {
+          content.value = newVal
+        }
+      }
+    )
 
     const modules = [
       {

@@ -1,15 +1,16 @@
 <script>
-import TitleEditor from '@/components/admin/qilleditor/product/create/TitleEditor.vue'
-import DescriptionEditor from '@/components/admin/qilleditor/product/create/DescriptionEditor.vue'
-import ContentEditor from '@/components/admin/qilleditor/product/create/ContentEditor.vue'
-import ThumbnailEditor from '@/components/admin/qilleditor/product/create/ThumbnailEditor.vue'
-import GalleryEditor from '@/components/admin/qilleditor/product/create/GalleryEditor.vue'
-import { reactive } from 'vue'
+import TitleEditor from '@/components/admin/qilleditor/product/edit/TitleEditor.vue'
+import DescriptionEditor from '@/components/admin/qilleditor/product/edit/DescriptionEditor.vue'
+import ContentEditor from '@/components/admin/qilleditor/product/edit/ContentEditor.vue'
+import ThumbnailEditor from '@/components/admin/qilleditor/product/edit/ThumbnailEditor.vue'
+import GalleryEditor from '@/components/admin/qilleditor/product/edit/GalleryEditor.vue'
+import { onMounted, reactive, ref } from 'vue'
 import router from '@/router'
-import OriginalPriceEditor from '@/components/admin/qilleditor/product/create/OriginalPriceEditor.vue'
-import CurrentPriceEditor from '@/components/admin/qilleditor/product/create/CurrentPriceEditor.vue'
-import VendorEditor from '@/components/admin/qilleditor/product/create/VendorEditor.vue'
-import CollectionEditor from '@/components/admin/qilleditor/product/create/CollectionEditor.vue'
+import OriginalPriceEditor from '@/components/admin/qilleditor/product/edit/OriginalPriceEditor.vue'
+import CurrentPriceEditor from '@/components/admin/qilleditor/product/edit/CurrentPriceEditor.vue'
+import VendorEditor from '@/components/admin/qilleditor/product/edit/VendorEditor.vue'
+import CollectionEditor from '@/components/admin/qilleditor/product/edit/CollectionEditor.vue'
+import { getProductByUuid } from '@/utils/product'
 
 export default {
   name: 'DashboardView',
@@ -28,9 +29,6 @@ export default {
     handleChangeTitle(newVal) {
       this.data.title.value = newVal
     },
-    handleChangeSEOKeyword(newVal) {
-      this.data.SEOKeyword.value = newVal
-    },
     handleUpdateDescription(newVal) {
       this.data.description.value = newVal
     },
@@ -39,16 +37,23 @@ export default {
     },
     handleChangeCollection(newCollectionId) {
       this.data.collection.value = newCollectionId
-      console.log(newCollectionId)
     },
     handleChangeCurrentPrice(newVal) {
       this.data.currentPrice.value = newVal
-      console.log(this.data.currentPrice.value)
+    },
+    handleChangeOriginalPrice(newVal) {
+      this.data.originalPrice.value = newVal
+    },
+    handleChangeThumbnail(newVal) {
+      this.data.thumbnail.value = newVal
+    },
+    handleChangeGallery(newVal) {
+      this.data.gallery.value = newVal
     },
     scrollToElement(id) {
       const element = document.getElementById(id)
       if (element) {
-        const offset = element.offsetTop - 300 // Khoảng cách 200px
+        const offset = element.offsetTop - 300
         window.scrollTo({ top: offset, behavior: 'smooth' })
       }
     },
@@ -57,7 +62,7 @@ export default {
       const text = value.replace(regex, '').trim()
       return !!text.length
     },
-    createProduct() {
+    updateProduct() {
       let isValid = true
 
       Object.values(this.data).forEach((property) => {
@@ -78,12 +83,6 @@ export default {
       })
 
       if (isValid) {
-        localStorage.removeItem('productDescriptionUnsaved')
-        localStorage.removeItem('productSEOKeywordUnsaved')
-        localStorage.removeItem('productTitleUnsaved')
-        localStorage.removeItem('productContentUnsaved')
-        localStorage.removeItem('productThumbnailUnsaved')
-        localStorage.removeItem('productGalleryUnsaved')
         router.push('/admin/product/list')
       }
     }
@@ -98,6 +97,12 @@ export default {
         placeholder: 'Enter the product name ...',
         showAlert: false,
         messageValidate: 'Product Name must be filled'
+      },
+      thumbnail: {
+        value: null
+      },
+      gallery: {
+        value: null
       },
       SEOKeyword: {
         id: 'productSEOKeyword',
@@ -158,13 +163,36 @@ export default {
       collection: {
         id: 'productCollection',
         label: 'Collections',
-        value: '',
+        value: {
+          name: ''
+        },
         required: false,
         placeholder: 'eg. Nike',
         showAlert: false,
         messageValidate: 'None'
       }
     })
+
+    async function fetchProductByUuid(Uuid) {
+      try {
+        const response = await getProductByUuid(Uuid)
+        data.title.value = response.data.name
+        data.thumbnail.value = response.data.thumbnail
+        data.gallery.value = response.data.gallery
+        data.description.value = response.data.description
+        data.content.value = response.data.content
+        data.originalPrice.value = response.data.original_price
+        data.currentPrice.value = response.data.current_price
+        data.collection.value = response.data.collection
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    onMounted(() => {
+      fetchProductByUuid(router.currentRoute.value.params.id)
+    })
+
     return {
       data
     }
@@ -172,7 +200,7 @@ export default {
 }
 </script>
 <template>
-  <form class="create-product-component" @submit.prevent="createProduct">
+  <form class="create-product-component" @submit.prevent="updateProduct">
     <div class="row">
       <div class="col-lg-8">
         <div class="product-information bg-white rounded-6 box-shadow-component">
@@ -181,18 +209,18 @@ export default {
           </div>
           <div class="product-information__body p-4">
             <TitleEditor
-              v-bind="data.title"
               class="mt-4 mt-lg-0"
+              v-bind="data.title"
               @updateContent="handleChangeTitle"
             ></TitleEditor>
             <DescriptionEditor
-              v-bind="data.description"
               class="mt-4"
+              v-bind="data.description"
               @updateContent="handleUpdateDescription"
             ></DescriptionEditor>
             <ContentEditor
-              v-bind="data.content"
               class="mt-4"
+              v-bind="data.content"
               @updateContent="handleChangeContent"
             ></ContentEditor>
           </div>
@@ -202,8 +230,15 @@ export default {
             <p class="mb-0 fw-semibold">Media</p>
           </div>
           <div class="product-media__body p-4">
-            <ThumbnailEditor></ThumbnailEditor>
-            <GalleryEditor class="mt-4"></GalleryEditor>
+            <ThumbnailEditor
+              v-bind="data.thumbnail"
+              @updateContent="handleChangeThumbnail"
+            ></ThumbnailEditor>
+            <GalleryEditor
+              class="mt-4"
+              v-bind="data.gallery"
+              @updateContent="handleChangeGallery"
+            ></GalleryEditor>
           </div>
         </div>
       </div>
@@ -214,13 +249,13 @@ export default {
           </div>
           <div class="product-price__body p-4">
             <OriginalPriceEditor
-              v-bind="data.originalPrice"
               class="mt-4 mt-lg-0"
-              @updateContent="handleChangeTitle"
+              v-bind="data.originalPrice"
+              @updateContent="handleChangeOriginalPrice"
             ></OriginalPriceEditor>
             <CurrentPriceEditor
-              v-bind="data.currentPrice"
               class="mt-21 mt-lg-0"
+              v-bind="data.currentPrice"
               @updateContent="handleChangeCurrentPrice"
             >
             </CurrentPriceEditor>
@@ -250,6 +285,7 @@ export default {
     </div>
   </form>
 </template>
+
 <style lang="scss" scoped>
 .create-product-component {
   &,

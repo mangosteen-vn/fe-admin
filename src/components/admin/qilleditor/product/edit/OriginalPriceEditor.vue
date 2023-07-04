@@ -9,7 +9,8 @@ export default {
     placeholder: String,
     required: Boolean,
     message: String,
-    showAlert: Boolean
+    showAlert: Boolean,
+    value: Number
   },
 
   data() {
@@ -17,34 +18,33 @@ export default {
       currentContent: ''
     }
   },
-  mounted() {
-    this.currentContent = localStorage.getItem('productCurrentPriceUnsaved') || ''
-  },
   methods: {
     validateNumber() {
-      this.currentContent = this.currentContent.replace(/\D/g, '')
+      this.currentContent = this.currentContent.replace(/\D/g, '') // Loại bỏ tất cả các ký tự không phải số
     }
   },
   watch: {
+    value(newVal) {
+      this.currentContent = newVal
+    },
     currentContent(newVal) {
       if (newVal.length > 255) {
         this.currentContent = newVal.slice(0, 255)
       }
       this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productCurrentPriceUnsaved', this.currentContent)
     }
   }
 }
 </script>
 <template>
-  <div class="mangosteen-current-price-editor">
-    <label :for="labelFor" class="mangosteen-current-price-editor__label form-label">{{
+  <div class="mangosteen-original-price-editor">
+    <label :for="labelFor" class="mangosteen-original-price-editor__label form-label">{{
       label
     }}</label>
     <input
       v-model="currentContent"
       type="text"
-      class="mangosteen-current-price-editor__input form-control"
+      class="mangosteen-original-price-editor__input form-control"
       :id="labelFor"
       :placeholder="placeholder"
       @input="validateNumber"
@@ -53,7 +53,7 @@ export default {
   </div>
 </template>
 <style lang="scss" scoped>
-.mangosteen-current-price-editor {
+.mangosteen-original-price-editor {
   position: relative;
   &__label {
     margin-bottom: 4px;

@@ -11,19 +11,18 @@ export default {
     message: String,
     showAlert: Boolean
   },
-
   data() {
     return {
       currentContent: ''
     }
   },
-  mounted() {
-    this.currentContent = localStorage.getItem('productCurrentPriceUnsaved') || ''
-  },
-  methods: {
-    validateNumber() {
-      this.currentContent = this.currentContent.replace(/\D/g, '')
+  computed: {
+    characterCount() {
+      return this.currentContent.length
     }
+  },
+  mounted() {
+    this.currentContent = localStorage.getItem('productSEOKeywordUnsaved') || ''
   },
   watch: {
     currentContent(newVal) {
@@ -31,51 +30,57 @@ export default {
         this.currentContent = newVal.slice(0, 255)
       }
       this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productCurrentPriceUnsaved', this.currentContent)
+      localStorage.setItem('productSEOKeywordUnsaved', this.currentContent)
     }
   }
 }
 </script>
 <template>
-  <div class="mangosteen-current-price-editor">
-    <label :for="labelFor" class="mangosteen-current-price-editor__label form-label">{{
-      label
-    }}</label>
-    <input
+  <div class="mangosteen-title-editor">
+    <label :for="labelFor" class="mangosteen-title-editor__label form-label"
+      >{{ label }} <span v-show="required" class="text-red-accent-3">*</span></label
+    >
+    <textarea
       v-model="currentContent"
       type="text"
-      class="mangosteen-current-price-editor__input form-control"
+      class="mangosteen-title-editor__input form-control"
       :id="labelFor"
       :placeholder="placeholder"
-      @input="validateNumber"
-    />
+    ></textarea>
+    <div class="mangosteen-title-editor__count">{{ characterCount }}/255</div>
     <DangerAlert class="mt-2" :message="message" :show="showAlert"></DangerAlert>
   </div>
 </template>
 <style lang="scss" scoped>
-.mangosteen-current-price-editor {
+.mangosteen-title-editor {
   position: relative;
   &__label {
-    margin-bottom: 4px;
+    //margin-bottom: 4px;
     font-size: 14px;
-    color: var(--bs-black);
-    font-weight: 500;
+    color: rgba(var(--nav-link-inerhit), 0.78);
+  }
+  &__count {
+    position: absolute;
+    bottom: 9px;
+    right: 12px;
+    color: rgba(var(--nav-link-inerhit), 0.78) !important;
+    font-size: 14px;
   }
   &__input {
-    height: 40px;
     box-shadow: none !important;
-    color: rgba(var(--nav-link-inerhit), 0.78) !important;
+    color: rgba(var(--nav-link-inerhit), 0.68) !important;
     caret: rgba(var(--nav-link-inerhit), 0.78);
     border-color: var(--blue-grey-lighten-3);
     font-weight: 500;
     padding-right: 80px;
     border-radius: 6px !important;
+    height: 120px;
     padding-left: 15px;
     &::placeholder {
       border-color: rgba(var(--nav-link-inerhit), 0.25);
       font-weight: 500;
-      font-style: italic;
       transition: 0.4s;
+      font-style: italic;
       color: rgba(var(--nav-link-inerhit), 0.48);
     }
     &:hover {
@@ -87,7 +92,7 @@ export default {
     }
     &:focus {
       box-shadow: 0 0 0.25rem 0.05rem rgba(105, 108, 255, 0.1) !important;
-      border: 1px solid rgb(105, 108, 255);
+      border: 1px solid #696cff;
       &::placeholder {
         padding-left: 2px;
         transition: 0.4s;

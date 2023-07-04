@@ -1,9 +1,6 @@
 <script>
 export default {
-  props: ['openAside'],
-  created() {
-    console.log(this.openAside)
-  }
+  props: ['openAside']
 }
 </script>
 <template>

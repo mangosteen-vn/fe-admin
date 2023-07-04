@@ -9,7 +9,8 @@ export default {
     placeholder: String,
     required: Boolean,
     message: String,
-    showAlert: Boolean
+    showAlert: Boolean,
+    value: String
   },
 
   data() {
@@ -17,49 +18,55 @@ export default {
       currentContent: ''
     }
   },
-  mounted() {
-    this.currentContent = localStorage.getItem('productCurrentPriceUnsaved') || ''
-  },
-  methods: {
-    validateNumber() {
-      this.currentContent = this.currentContent.replace(/\D/g, '')
+  computed: {
+    characterCount() {
+      return this.currentContent.length
     }
   },
   watch: {
+    value(newVal) {
+      this.currentContent = newVal
+    },
     currentContent(newVal) {
       if (newVal.length > 255) {
         this.currentContent = newVal.slice(0, 255)
       }
       this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productCurrentPriceUnsaved', this.currentContent)
     }
   }
 }
 </script>
 <template>
-  <div class="mangosteen-current-price-editor">
-    <label :for="labelFor" class="mangosteen-current-price-editor__label form-label">{{
-      label
-    }}</label>
+  <div class="mangosteen-title-editor">
+    <label :for="labelFor" class="mangosteen-title-editor__label form-label"
+      >{{ label }} <span v-show="required" class="text-blue-grey-lighten-1">(Optional)</span></label
+    >
     <input
       v-model="currentContent"
       type="text"
-      class="mangosteen-current-price-editor__input form-control"
+      class="mangosteen-title-editor__input form-control"
       :id="labelFor"
       :placeholder="placeholder"
-      @input="validateNumber"
     />
+    <div class="mangosteen-title-editor__count">{{ characterCount }}/255</div>
     <DangerAlert class="mt-2" :message="message" :show="showAlert"></DangerAlert>
   </div>
 </template>
 <style lang="scss" scoped>
-.mangosteen-current-price-editor {
+.mangosteen-title-editor {
   position: relative;
   &__label {
     margin-bottom: 4px;
     font-size: 14px;
     color: var(--bs-black);
     font-weight: 500;
+  }
+  &__count {
+    position: absolute;
+    bottom: 9px;
+    right: 12px;
+    color: rgba(var(--nav-link-inerhit), 0.78) !important;
+    font-size: 14px;
   }
   &__input {
     height: 40px;

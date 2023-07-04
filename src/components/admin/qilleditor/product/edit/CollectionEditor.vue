@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+import { defineComponent, onMounted, ref, watch } from 'vue'
 import IconSelect from '@/components/icons/product/create/IconSelect.vue'
 import IconClear from '@/components/icons/product/create/IconClear.vue'
 import { getCollections } from '@/utils/collection/collection'
@@ -44,21 +44,30 @@ export default defineComponent({
     placeholder: String,
     required: Boolean,
     message: String,
-    showAlert: Boolean
+    showAlert: Boolean,
+    value: Object
   },
   setup(props: any, { emit }: any) {
-    const collection = ref(null)
+    const collection = ref(props.value || null)
     const collections = ref([])
 
     async function fetchCollections() {
       try {
         const { data } = await getCollections(-1)
         collections.value = data
-        console.log('Collections:', data)
       } catch (error) {
         console.error(error)
       }
     }
+
+    watch(
+      () => props.value,
+      (newVal: null) => {
+        if (newVal !== null) {
+          collection.value = newVal
+        }
+      }
+    )
 
     onMounted(fetchCollections)
 
