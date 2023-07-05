@@ -1,4 +1,4 @@
-//@/router/index.ts
+//@/router/edit.ts
 // @ts-ignore
 import { createRouter, createWebHistory } from 'vue-router'
 // @ts-ignore
@@ -17,6 +17,7 @@ import ListProduct from '@/components/admin/product/list/index.vue'
 import CreateProduct from '@/components/admin/product/create/index.vue'
 import ConfigProduct from '@/components/admin/product/config/index.vue'
 import EditProduct from '@/components/admin/product/edit/index.vue'
+import ImageEdit from "@/components/admin/image/edit/ImageEdit.vue";
 
 // @ts-ignore
 const router = createRouter({
@@ -52,6 +53,15 @@ const router = createRouter({
         {
           path: 'dashboard',
           component: DashboardView
+        },
+        {
+          path: 'image',
+          children: [
+            {
+              path: 'edit',
+              component: ImageEdit
+            }
+          ]
         },
         {
           path: 'product',

@@ -48,11 +48,11 @@ export default defineComponent({
     <label class="mangosteen-gallery-editor__label"> Gallery Image </label>
     <div class="d-flex flex-wrap gap-3">
       <div
-        v-for="(image, id) in webpPaths"
-        :key="image.id"
+        v-for="(image, index) in webpPaths"
+        :key="image.index"
         class="mangosteen-gallery-editor__img ratio ratio-1x1 p-1"
       >
-        <img :src="image.url" class="base64-img img-thumbnail object-fit-cover" />
+        <img :src="image" class="base64-img img-thumbnail object-fit-cover" />
         <div
           class="mangosteen-gallery-editor__img__action d-flex align-items-center justify-content-center"
         >
