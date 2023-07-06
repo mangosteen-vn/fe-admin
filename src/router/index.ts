@@ -17,7 +17,7 @@ import ListProduct from '@/components/admin/product/list/index.vue'
 import CreateProduct from '@/components/admin/product/create/index.vue'
 import ConfigProduct from '@/components/admin/product/config/index.vue'
 import EditProduct from '@/components/admin/product/edit/index.vue'
-import ImageEdit from "@/components/admin/image/edit/ImageEdit.vue";
+import ImageEdit from '@/components/admin/image/edit/ImageEdit.vue'
 
 // @ts-ignore
 const router = createRouter({

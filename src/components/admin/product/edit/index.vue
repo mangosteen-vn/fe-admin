@@ -35,8 +35,8 @@ export default {
     handleChangeContent(newVal) {
       this.data.content.value = newVal
     },
-    handleChangeCollection(newCollectionId) {
-      this.data.collection.value = newCollectionId
+    handleChangeCollection(newVal) {
+      this.data.collection.value = newVal
     },
     handleChangeCurrentPrice(newVal) {
       this.data.currentPrice.value = newVal
@@ -172,8 +172,9 @@ export default {
         messageValidate: 'None'
       }
     })
-
+    const loading = ref(false)
     async function fetchProductByUuid(Uuid) {
+      loading.value = true
       try {
         const response = await getProductByUuid(Uuid)
         data.title.value = response.data.name
@@ -184,8 +185,10 @@ export default {
         data.originalPrice.value = response.data.original_price
         data.currentPrice.value = response.data.current_price
         data.collection.value = response.data.collection
+        loading.value = false
       } catch (error) {
         console.error(error)
+        router.push('/admin/product/list')
       }
     }
 
@@ -194,7 +197,8 @@ export default {
     })
 
     return {
-      data
+      data,
+      loading
     }
   }
 }
@@ -203,7 +207,13 @@ export default {
   <form class="create-product-component" @submit.prevent="updateProduct">
     <div class="row">
       <div class="col-lg-8">
-        <div class="product-information bg-white rounded-6 box-shadow-component">
+        <div
+          class="product-information bg-white rounded-6 box-shadow-component"
+          :class="{ loading: loading }"
+        >
+          <div class="wrap-loader">
+            <span class="loader"></span>
+          </div>
           <div class="product-information__title p-4">
             <p class="mb-0 fw-semibold">Product Information</p>
           </div>
@@ -225,7 +235,13 @@ export default {
             ></ContentEditor>
           </div>
         </div>
-        <div class="product-media mt-4 bg-white rounded-6 box-shadow-component">
+        <div
+          class="product-media mt-4 bg-white rounded-6 box-shadow-component"
+          :class="{ loading: loading }"
+        >
+          <div class="wrap-loader">
+            <span class="loader"></span>
+          </div>
           <div class="product-media__title p-4">
             <p class="mb-0 fw-semibold">Media</p>
           </div>
@@ -243,7 +259,13 @@ export default {
         </div>
       </div>
       <div class="col-lg-4 mt-4 mt-lg-0">
-        <div class="product-price bg-white rounded-6 box-shadow-component">
+        <div
+          class="product-price bg-white rounded-6 box-shadow-component"
+          :class="{ loading: loading }"
+        >
+          <div class="wrap-loader">
+            <span class="loader"></span>
+          </div>
           <div class="product-price__title p-4">
             <p class="mb-0 fw-semibold">Pricing</p>
           </div>
@@ -267,7 +289,13 @@ export default {
             </p>
           </div>
         </div>
-        <div class="product-organization bg-white rounded-6 mt-4 box-shadow-component">
+        <div
+          class="product-organization bg-white rounded-6 mt-4 box-shadow-component"
+          :class="{ loading: loading }"
+        >
+          <div class="wrap-loader">
+            <span class="loader"></span>
+          </div>
           <div class="product-organization__title p-4">
             <p class="mb-0 fw-semibold">Organization</p>
           </div>
@@ -302,6 +330,38 @@ export default {
 
     &__body {
       padding-top: 21px !important;
+    }
+    .wrap-loader {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    &.loading {
+      opacity: 0.4;
+      position: relative;
+      height: 400px;
+      overflow: hidden;
+      .wrap-loader {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+      }
+
+      &::after {
+        position: absolute;
+        content: '';
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white !important;
+        border-radius: 6px;
+      }
     }
   }
 

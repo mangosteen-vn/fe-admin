@@ -1,0 +1,73 @@
+.v-select--custom-v1 {
+  &.h-40 {
+    .v-field__field {
+      height: 40px;
+    }
+  }
+
+  .mangosteen__select {
+    &.v-select--active-menu {
+      .v-field__outline {
+        color: rgb(115, 13, 240);
+      }
+    }
+    .v-field {
+      .v-field__outline {
+        color: var(--blue-grey-lighten-3);
+        --v-field-border-opacity: 1;
+        --v-field-border-with: 1px !important;
+        .v-field__outline__start {
+          border-radius: 6px 0px 0px 6px;
+        }
+
+        .v-field__outline__end {
+          border-radius: 0px 6px 6px 0px;
+        }
+      }
+    }
+  }
+
+  .v-select__selection {
+    align-items: center;
+    .v-select__selection-text {
+      font-weight: 500;
+      color: rgba(var(--nav-link-inerhit), 0.78);
+    }
+  }
+}
+.v-field--variant-outlined.v-field--focused .v-field__outline {
+  --v-field-border-width: 1px;
+}
+//
+.v-select__content {
+  border-radius: 6px;
+  box-shadow: 0 4px 18px rgba(47, 43, 61, 0.1), 0 0 transparent, 0 0 transparent !important;
+
+  .v-list-item {
+    border-radius: 0.375rem;
+    margin-block: 0.25rem;
+    margin-inline: 0.5rem;
+    min-block-size: 2.375rem;
+    color: var(--vuexy-purple);
+    &:hover {
+      background-color: rgba(var(--vuexy-purple), 1);
+      .v-list-item-title {
+        color: var(--vuexy-purple);
+      }
+    }
+    &.v-list-item--active {
+      background-color: var(--vuexy-purple);
+      .v-list-item-title {
+        color: var(--bs-white);
+      }
+      .v-list-item__overlay {
+        opacity: 0;
+      }
+    }
+
+    &-title {
+      font-weight: 500;
+      color: rgba(var(--nav-link-inerhit), 0.78);
+    }
+  }
+}
