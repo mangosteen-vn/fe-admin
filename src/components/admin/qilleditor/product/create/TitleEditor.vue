@@ -1,45 +1,57 @@
-<script>
+<script lang="ts" setup>
 import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
+import { computed, onMounted, ref, watch, defineEmits, defineProps } from 'vue'
 
-export default {
-  components: { DangerAlert },
-  props: {
-    labelFor: String,
-    label: String,
-    placeholder: String,
-    required: Boolean,
-    message: String,
-    showAlert: Boolean
-  },
+const MAX_CONTENT_LENGTH = 255
 
-  data() {
-    return {
-      currentContent: ''
-    }
+const currentContent = ref('')
+
+const emit = defineEmits(['updateContent'])
+
+const props: any = defineProps({
+  labelFor: String,
+  label: {
+    type: String,
+    default: ''
   },
-  computed: {
-    characterCount() {
-      return this.currentContent.length
-    }
+  placeholder: String,
+  required: Boolean,
+  labelRequired: {
+    type: String,
+    default: ''
   },
-  mounted() {
-    this.currentContent = localStorage.getItem('productTitleUnsaved') || ''
+  messageValidate: {
+    type: String,
+    default: ''
   },
-  watch: {
-    currentContent(newVal) {
-      if (newVal.length > 255) {
-        this.currentContent = newVal.slice(0, 255)
-      }
-      this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productTitleUnsaved', this.currentContent)
-    }
+  showAlert: Boolean
+})
+
+const characterCount: number = computed(() => currentContent.value.length)
+
+onMounted(() => {
+  const productTitleUnsaved: string | null = localStorage.getItem('productTitleUnsaved')
+  if (productTitleUnsaved) {
+    currentContent.value = productTitleUnsaved
   }
-}
+})
+
+watch(
+  () => currentContent.value,
+  (newValue: string) => {
+    if (newValue.length > MAX_CONTENT_LENGTH) {
+      currentContent.value = newValue.slice(0, MAX_CONTENT_LENGTH)
+    }
+    emit('updateContent', newValue)
+    localStorage.setItem('productVendorUnsaved', newValue)
+  }
+)
 </script>
 <template>
   <div class="mangosteen-title-editor">
-    <label :for="labelFor" class="mangosteen-title-editor__label form-label"
-      >{{ label }} <span v-show="required" class="text-blue-grey-lighten-1">(Optional)</span></label
+    <label :for="labelFor" class="mangosteen-title-editor__label form-label text-capitalize"
+      >{{ label }}
+      <span v-show="required" class="text-blue-grey-lighten-1">{{ labelRequired }}</span></label
     >
     <input
       v-model="currentContent"
@@ -49,8 +61,8 @@ export default {
       :placeholder="placeholder"
     />
     <div class="mangosteen-title-editor__count">{{ characterCount }}/255</div>
-    <DangerAlert class="mt-2" :message="message" :show="showAlert"></DangerAlert>
   </div>
+  <DangerAlert class="mt-2" :message="messageValidate" :show="showAlert"></DangerAlert>
 </template>
 <style lang="scss" scoped>
 .mangosteen-title-editor {

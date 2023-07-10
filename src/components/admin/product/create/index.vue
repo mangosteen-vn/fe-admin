@@ -10,10 +10,13 @@ import OriginalPriceEditor from '@/components/admin/qilleditor/product/create/Or
 import CurrentPriceEditor from '@/components/admin/qilleditor/product/create/CurrentPriceEditor.vue'
 import VendorEditor from '@/components/admin/qilleditor/product/create/VendorEditor.vue'
 import CollectionEditor from '@/components/admin/qilleditor/product/create/CollectionEditor.vue'
+import TagEditor from '@/components/admin/qilleditor/product/create/TagEditor.vue'
+import { useI18n } from 'vue-i18n'
 
 export default {
   name: 'DashboardView',
   components: {
+    TagEditor,
     CollectionEditor,
     VendorEditor,
     CurrentPriceEditor,
@@ -39,16 +42,14 @@ export default {
     },
     handleChangeCollection(newCollectionId) {
       this.data.collection.value = newCollectionId
-      console.log(newCollectionId)
     },
     handleChangeCurrentPrice(newVal) {
       this.data.currentPrice.value = newVal
-      console.log(this.data.currentPrice.value)
     },
     scrollToElement(id) {
       const element = document.getElementById(id)
       if (element) {
-        const offset = element.offsetTop - 300 // Khoảng cách 200px
+        const offset = element.offsetTop - 300
         window.scrollTo({ top: offset, behavior: 'smooth' })
       }
     },
@@ -89,43 +90,71 @@ export default {
     }
   },
   setup() {
+    const { t } = useI18n()
+
     const data = reactive({
       title: {
         id: 'productTitle',
-        label: 'Product Name',
+        label: t('product.component.product-information.component.product-name.label'),
         value: '',
         required: true,
-        placeholder: 'Enter the product name ...',
+        placeholder: t('product.component.product-information.component.product-name.placeholder'),
         showAlert: false,
-        messageValidate: 'Product Name must be filled'
+        labelRequired: t(
+          'product.component.product-information.component.product-name.label-required'
+        ),
+        messageValidate: t('validation.required', {
+          attribute: t('product.component.product-information.component.product-name.label')
+        })
       },
       SEOKeyword: {
         id: 'productSEOKeyword',
-        label: 'SEO Keyword',
+        label: t('product.component.product-information.component.product-description.label'),
         value: '',
         required: true,
-        placeholder: 'Enter the product SEO Keyword ...',
+        placeholder: t(
+          'product.component.product-information.component.product-description.placeholder'
+        ),
         showAlert: false,
-        messageValidate: 'SEO Keyword must be filled'
+        labelRequired: t(
+          'product.component.product-information.component.product-description.label-required'
+        ),
+        messageValidate: t('validation.required', {
+          attribute: t('product.component.product-information.component.product-description.label')
+        })
       },
       description: {
         id: 'productDescription',
-        label: 'Product Description',
+        label: t('product.component.product-information.component.product-description.label'),
         value: '',
         required: true,
-        placeholder: 'Enter the product description ...',
+        placeholder: t(
+          'product.component.product-information.component.product-description.placeholder'
+        ),
         showAlert: false,
-        messageValidate: 'Product Description must be filled',
+        labelRequired: t(
+          'product.component.product-information.component.product-description.label-required'
+        ),
+        messageValidate: t('validation.required', {
+          attribute: t('product.component.product-information.component.product-description.label')
+        }),
         type: 'quillEditor'
       },
       content: {
         id: 'productContent',
-        label: 'Product Content',
+        label: t('product.component.product-information.component.product-content.label'),
         value: '',
         required: true,
-        placeholder: 'Enter the product content ...',
+        placeholder: t(
+          'product.component.product-information.component.product-content.placeholder'
+        ),
         showAlert: false,
-        messageValidate: 'Product Content must be filled',
+        labelRequired: t(
+          'product.component.product-information.component.product-content.label-required'
+        ),
+        messageValidate: t('validation.required', {
+          attribute: t('product.component.product-information.component.product-content.label')
+        }),
         type: 'quillEditor'
       },
       originalPrice: {
@@ -163,10 +192,21 @@ export default {
         placeholder: 'eg. Nike',
         showAlert: false,
         messageValidate: 'None'
+      },
+      tag: {
+        id: 'productTag',
+        label: 'Tag',
+        value: '',
+        required: false,
+        placeholder: 'Tags Product',
+        showAlert: false,
+        messageValidate: 'None'
       }
     })
+
     return {
-      data
+      data,
+      t
     }
   }
 }
@@ -177,7 +217,7 @@ export default {
       <div class="col-lg-8">
         <div class="product-information bg-white rounded-6 box-shadow-component">
           <div class="product-information__title p-4">
-            <p class="mb-0 fw-semibold">Product Information</p>
+            <p class="mb-0 fw-semibold">{{ $t('product.component.product-information.label') }}</p>
           </div>
           <div class="product-information__body p-4">
             <TitleEditor
@@ -239,15 +279,19 @@ export default {
           <div class="product-organization__body p-4">
             <VendorEditor v-bind="data.vendor"></VendorEditor>
             <CollectionEditor
-              class="mt-4"
+              class="mt-21"
               v-bind="data.collection"
               @updateContent="handleChangeCollection"
             >
             </CollectionEditor>
+            <!--            <TagEditor v-bind="data.tag" class="mt-21">-->
+
+            <!--            </TagEditor>-->
           </div>
         </div>
       </div>
     </div>
+    <button type="submit" class="btn btn-primary">Primary</button>
   </form>
 </template>
 <style lang="scss" scoped>

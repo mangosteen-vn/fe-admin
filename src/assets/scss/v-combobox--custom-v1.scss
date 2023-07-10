@@ -1,0 +1,11 @@
+.v-combobox--custom-v1 {
+  &.h-40 {
+    .v-field__field {
+      align-items: center;
+      .v-field__input {
+        padding-top: 6px;
+        padding-bottom: 6px;
+      }
+    }
+  }
+}

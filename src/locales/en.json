@@ -1,0 +1,56 @@
+{
+  "product": {
+    "label": "Product",
+    "create": "Create",
+    "list": "List",
+    "category": "Category",
+    "config": "Config",
+    "component": {
+      "product-information": {
+        "label": "Product Information",
+        "component": {
+          "product-name": {
+            "label": "product name",
+            "placeholder": "eg. Nike Air Force 1",
+            "label-required": "(Optional)"
+          },
+          "product-description": {
+            "label": "product description",
+            "placeholder": "eg. Designed by Bruce Kilgore and introduced in 1982, the Air Force 1 was the first-ever basketball shoe to feature Nike Air technology ...",
+            "label-required": "(Optional)"
+          },
+          "product-content": {
+            "label": "product content",
+            "placeholder": "Colour Shown: White/White\nStyle: DH2920-111",
+            "label-required": "(Optionasl)"
+          }
+        }
+      },
+      "product-media": {
+        "label": "Media",
+        "component": {
+          "thumbnail": "Thumbnail",
+          "gallery-image": "Gallery Image"
+        }
+      },
+      "product-price": {
+        "label": "Pricing",
+        "component": {
+          "original-price": "Original Price",
+          "current-price": "Current Price"
+        }
+      },
+      "product-organization": {
+        "label": "Organization",
+        "component": {
+          "product-vendor": "Vendor",
+          "product-collection": "Collection"
+        }
+      }
+    }
+  },
+  "validation": {
+    "required": "The {attribute} field is required."
+  },
+  "welcome": "Welcome to our app"
+}

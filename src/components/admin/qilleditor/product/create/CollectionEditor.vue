@@ -30,53 +30,54 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+<script lang="ts" setup>
+import { onMounted, ref, onServerPrefetch, defineProps, defineEmits } from 'vue'
 import IconSelect from '@/components/icons/product/create/IconSelect.vue'
 import IconClear from '@/components/icons/product/create/IconClear.vue'
 import { getCollections } from '@/utils/collection/collection'
 
-export default defineComponent({
-  components: { IconClear, IconSelect },
-  props: {
-    labelFor: String,
-    label: String,
-    placeholder: String,
-    required: Boolean,
-    message: String,
-    showAlert: Boolean
-  },
-  setup(props: any, { emit }: any) {
-    const collection = ref(null)
-    const collections = ref([])
+const collection = ref(null)
+const collections = ref([])
 
-    async function fetchCollections() {
-      try {
-        const { data } = await getCollections(-1)
-        collections.value = data
-        console.log('Collections:', data)
-      } catch (error) {
-        console.error(error)
-      }
-    }
+const props = defineProps({
+  labelFor: String,
+  label: String,
+  placeholder: String,
+  required: Boolean,
+  message: String,
+  showAlert: Boolean
+})
 
-    onMounted(fetchCollections)
+const emit = defineEmits(['updateContent'])
 
-    function handleClearCollection() {
-      collection.value = null
-      emit('updateContent', null)
-    }
+async function fetchCollections() {
+  try {
+    const { data } = await getCollections(-1)
+    collections.value = data
+  } catch (error) {
+    console.error(error)
+  }
+}
 
-    function handleChangeCollection() {
-      emit('updateContent', collection.value.id)
-    }
+onServerPrefetch(fetchCollections())
 
-    return {
-      collection,
-      collections,
-      handleClearCollection,
-      handleChangeCollection
-    }
+onMounted(async () => {
+  const collectionUnsaved = localStorage.getItem('collectionUnsaved')
+  if (collectionUnsaved) {
+    collection.value = JSON.parse(collectionUnsaved)
+  }
+  if (!collections.value) {
+    await fetchCollections()
   }
 })
+
+function handleClearCollection() {
+  collection.value = null
+  emit('updateContent', null)
+}
+
+function handleChangeCollection() {
+  emit('updateContent', collection.value)
+  localStorage.setItem('collectionUnsaved', JSON.stringify(collection.value))
+}
 </script>

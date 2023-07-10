@@ -34,10 +34,12 @@
       color: rgba(var(--nav-link-inerhit), 0.78);
     }
   }
+
+  .v-field--variant-outlined.v-field--focused .v-field__outline {
+    --v-field-border-width: 1px;
+  }
 }
-.v-field--variant-outlined.v-field--focused .v-field__outline {
-  --v-field-border-width: 1px;
-}
+
 //
 .v-select__content {
   border-radius: 6px;
@@ -49,10 +51,17 @@
     margin-inline: 0.5rem;
     min-block-size: 2.375rem;
     color: var(--vuexy-purple);
-    &:hover {
+    &:after {
+      border: 0;
+    }
+    &:hover,
+    &:focus-visible {
       background-color: rgba(var(--vuexy-purple), 1);
       .v-list-item-title {
         color: var(--vuexy-purple);
+      }
+      .v-list-item__overlay {
+        opacity: 0.08;
       }
     }
     &.v-list-item--active {

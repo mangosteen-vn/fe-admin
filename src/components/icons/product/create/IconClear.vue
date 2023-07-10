@@ -1,7 +1,7 @@
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    class="v-icon mt-1 v-theme--light v-icon--size-default icon icon-tabler icon-tabler-x"
+    class="v-icon v-theme--light v-icon--size-default icon icon-tabler icon-tabler-x"
     width="44"
     height="44"
     viewBox="0 0 24 24"
@@ -20,5 +20,6 @@
 .icon {
   width: 18px;
   height: 18px;
+  margin-top: 2px;
 }
 </style>

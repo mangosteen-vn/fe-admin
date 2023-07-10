@@ -1,75 +1,81 @@
-<script>
+<script lang="ts" setup>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import BlotFormatter from 'quill-blot-formatter'
 import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
 
-export default {
-  components: {
-    DangerAlert,
-    QuillEditor
+import { defineProps, onMounted, reactive, ref, defineEmits } from 'vue'
+
+const props: any = defineProps({
+  labelFor: String,
+  label: {
+    type: String,
+    default: ''
   },
-  props: {
-    labelFor: String,
-    label: String,
-    placeholder: String,
-    required: Boolean,
-    message: String,
-    showAlert: Boolean
+  placeholder: String,
+  required: Boolean,
+  labelRequired: {
+    type: String,
+    default: ''
   },
-  data() {
-    return {
-      options: {
-        placeholder: this.placeholder || '',
-        modules: {
-          toolbar: [
-            ['bold', 'italic', 'underline'],
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            [{ indent: '-1' }, { indent: '+1' }],
-            ['clean']
-          ]
-        }
-      },
-      focused: false,
-      content: null
-    }
+  messageValidate: {
+    type: String,
+    default: ''
   },
-  setup: () => {
-    const modules = [
-      {
-        name: 'blotFormatter',
-        module: BlotFormatter,
-        options: {
-          /* options */
-        }
-      }
+  showAlert: Boolean
+})
+
+const emit = defineEmits(['updateContent'])
+
+const options = reactive({
+  placeholder: props.placeholder || '',
+  modules: {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      ['clean']
     ]
-    return { modules }
-  },
-  methods: {
-    handleFocus() {
-      this.focused = true
-    },
-    handleBlur() {
-      this.focused = false
-    },
-    handleUpdateContent(newContent) {
-      this.$emit('updateContent', newContent)
-      localStorage.setItem('productDescriptionUnsaved', newContent)
-    }
-  },
-  mounted() {
-    const contentUnsaved = localStorage.getItem('productDescriptionUnsaved')
-    if (contentUnsaved) {
-      this.content = contentUnsaved
-    }
   }
+})
+const modules = reactive({
+  name: 'blotFormatter',
+  module: BlotFormatter,
+  options: {
+    /* options */
+  }
+})
+
+const focused = ref(false)
+const content = ref(null)
+
+const handleFocus = () => {
+  focused.value = true
 }
+
+const handleBlur = () => {
+  focused.value = false
+}
+
+function handleUpdateContent(newContent: string) {
+  emit('updateContent', newContent)
+  localStorage.setItem('productDescriptionUnsaved', newContent)
+}
+
+onMounted(() => {
+  const contentUnsaved: string | null = localStorage.getItem('productDescriptionUnsaved')
+  if (contentUnsaved) {
+    content.value = contentUnsaved
+  }
+})
 </script>
 <template>
   <div class="mangosteen-description-details-editor" :class="{ focused: focused }">
-    <label :for="labelFor" class="mangosteen-description-details-editor__label form-label"
-      >{{ label }} <span v-show="required" class="text-blue-grey-lighten-1">(Optional)</span></label
+    <label
+      :for="labelFor"
+      class="mangosteen-description-details-editor__label form-label text-capitalize"
+      >{{ label }}
+      <span v-show="required" class="text-blue-grey-lighten-1">{{ labelRequired }}</span></label
     >
     <QuillEditor
       v-model:content="content"
@@ -81,7 +87,12 @@ export default {
       @focus="handleFocus"
       @update:content="handleUpdateContent"
     />
-    <DangerAlert :id="labelFor" :message="message" :show="showAlert" class="mt-2"></DangerAlert>
+    <DangerAlert
+      :id="labelFor"
+      :message="messageValidate"
+      :show="showAlert"
+      class="mt-2"
+    ></DangerAlert>
   </div>
 </template>
 <style lang="scss">

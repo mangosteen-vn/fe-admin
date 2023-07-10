@@ -1,40 +1,32 @@
-<script>
+<script lang="ts" setup>
 import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
+import { defineProps, onMounted, ref, watch, defineEmits } from 'vue'
 
-export default {
-  components: { DangerAlert },
-  props: {
-    labelFor: String,
-    label: String,
-    placeholder: String,
-    required: Boolean,
-    message: String,
-    showAlert: Boolean
-  },
+const MAX_CONTENT_LENGTH = 255
 
-  data() {
-    return {
-      currentContent: ''
-    }
-  },
-  mounted() {
-    this.currentContent = localStorage.getItem('productTitleUnsaved') || ''
-  },
-  methods: {
-    validateNumber() {
-      this.currentContent = this.currentContent.replace(/\D/g, '') // Loại bỏ tất cả các ký tự không phải số
-    }
-  },
-  watch: {
-    currentContent(newVal) {
-      if (newVal.length > 255) {
-        this.currentContent = newVal.slice(0, 255)
-      }
-      this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productTitleUnsaved', this.currentContent)
-    }
+const props: any = defineProps({
+  labelFor: String,
+  label: String,
+  placeholder: String,
+  required: Boolean,
+  message: String,
+  showAlert: Boolean
+})
+
+const currentContent = ref('')
+const emit = defineEmits(['updateContent'])
+
+onMounted(() => {
+  currentContent.value = localStorage.getItem('productVendorUnsaved') || ''
+})
+
+watch(currentContent, (newValue: string) => {
+  if (newValue.length > MAX_CONTENT_LENGTH) {
+    currentContent.value = newValue.slice(0, MAX_CONTENT_LENGTH)
   }
-}
+  emit('updateContent', newValue)
+  localStorage.setItem('productVendorUnsaved', newValue)
+})
 </script>
 <template>
   <div class="mangosteen-vendor-editor">
@@ -45,7 +37,6 @@ export default {
       class="mangosteen-vendor-editor__input form-control"
       :id="labelFor"
       :placeholder="placeholder"
-      @input="validateNumber"
     />
     <DangerAlert class="mt-2" :message="message" :show="showAlert"></DangerAlert>
   </div>

@@ -1,5 +1,5 @@
-<script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
+<script lang="ts" setup>
+import { defineComponent, onMounted, ref, defineProps, reactive, defineEmits } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import BlotFormatter from 'quill-blot-formatter'
@@ -12,133 +12,129 @@ import ImageUploader from 'quill-image-uploader'
 import { uploadImage } from '@/utils/file'
 import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
 
-export default defineComponent({
-  components: {
-    DangerAlert,
-    QuillEditor
+const props = defineProps({
+  labelFor: String,
+  label: {
+    type: String,
+    default: ''
   },
-  props: {
-    labelFor: String,
-    label: String,
-    placeholder: String,
-    required: Boolean,
-    message: String,
-    showAlert: Boolean
+  placeholder: String,
+  required: Boolean,
+  labelRequired: {
+    type: String,
+    default: ''
   },
-  setup(props: any, { emit }: any) {
-    const content = ref<string | null>(null)
-    const focused = ref(false)
+  messageValidate: {
+    type: String,
+    default: ''
+  },
+  showAlert: Boolean
+})
 
-    const options = {
-      placeholder: props.placeholder || '',
-      modules: {
-        toolbar: [['markdown']]
-      }
-    }
+const emit = defineEmits(['updateContent'])
 
-    const handleFocus = () => {
-      focused.value = true
-    }
+const content = ref<string | null>(null)
+const focused = ref(false)
 
-    onMounted(() => {
-      const contentUnsaved = localStorage.getItem('productContentUnsaved')
-      if (contentUnsaved) {
-        content.value = contentUnsaved
-      }
-    })
-
-    const handleBlur = () => {
-      focused.value = false
-    }
-
-    const handleUpdateContent = (newContent: string) => {
-      emit('updateContent', newContent)
-      localStorage.setItem('productContentUnsaved', newContent)
-    }
-
-    const modules = [
-      {
-        name: 'blotFormatter',
-        module: BlotFormatter,
-        options: {
-          /* options */
-        }
-      },
-      {
-        name: 'autoFormat',
-        module: Autoformat,
-        options: {
-          /* options */
-        }
-      },
-      {
-        name: 'imageCompress',
-        module: ImageCompress,
-        options: {
-          /* options */
-        }
-      },
-      {
-        name: 'imageDrop',
-        module: ImageDrop,
-        options: {
-          /* options */
-        }
-      },
-      {
-        name: 'magicUrl',
-        module: MagicUrl,
-        options: {
-          /* options */
-        }
-      },
-      {
-        name: 'markdownShortcuts',
-        module: MarkdownShortcuts,
-        options: {
-          /* options */
-        }
-      },
-      {
-        name: 'imageUploader',
-        module: ImageUploader,
-        options: {
-          upload: (file: File) => {
-            return new Promise<string>((resolve, reject) => {
-              const formData = new FormData()
-              formData.append('image', file)
-              console.log(formData)
-              uploadImage(formData)
-                .then((webpPath: string) => {
-                  resolve(webpPath)
-                })
-                .catch((error: Error) => {
-                  reject('Upload failed')
-                  console.error('Error:', error)
-                })
-            })
-          }
-        }
-      }
-    ]
-
-    return {
-      content,
-      focused,
-      options,
-      handleFocus,
-      handleBlur,
-      handleUpdateContent,
-      modules
-    }
+const options = reactive({
+  placeholder: props.placeholder || '',
+  modules: {
+    toolbar: [['markdown']]
   }
 })
+
+const handleFocus = () => {
+  focused.value = true
+}
+
+const handleBlur = () => {
+  focused.value = false
+}
+
+onMounted(() => {
+  const contentUnsaved: string | null = localStorage.getItem('productContentUnsaved')
+  if (contentUnsaved) {
+    content.value = contentUnsaved
+  }
+})
+
+const handleUpdateContent = (newContent: string) => {
+  emit('updateContent', newContent)
+  localStorage.setItem('productContentUnsaved', newContent)
+}
+
+const modules = reactive(
+  {
+    name: 'blotFormatter',
+    module: BlotFormatter,
+    options: {
+      /* options */
+    }
+  },
+  {
+    name: 'autoFormat',
+    module: Autoformat,
+    options: {
+      /* options */
+    }
+  },
+  {
+    name: 'imageCompress',
+    module: ImageCompress,
+    options: {
+      /* options */
+    }
+  },
+  {
+    name: 'imageDrop',
+    module: ImageDrop,
+    options: {
+      /* options */
+    }
+  },
+  {
+    name: 'magicUrl',
+    module: MagicUrl,
+    options: {
+      /* options */
+    }
+  },
+  {
+    name: 'markdownShortcuts',
+    module: MarkdownShortcuts,
+    options: {
+      /* options */
+    }
+  },
+  {
+    name: 'imageUploader',
+    module: ImageUploader,
+    options: {
+      upload: (file: File) => {
+        return new Promise<string>((resolve, reject) => {
+          const formData = new FormData()
+          formData.append('image', file)
+          console.log(formData)
+          uploadImage(formData)
+            .then((webpPath: string) => {
+              resolve(webpPath)
+            })
+            .catch((error: Error) => {
+              reject('Upload failed')
+              console.error('Error:', error)
+            })
+        })
+      }
+    }
+  }
+)
 </script>
 
 <template>
   <div :class="{ focused: focused }" class="mangosteen-content-editor">
-    <label :for="labelFor" class="mangosteen-content-editor__label form-label">
-      {{ label }} <span v-show="required" class="text-blue-grey-lighten-1">(Optional)</span>
+    <label :for="labelFor" class="mangosteen-content-editor__label form-label text-capitalize">
+      {{ label }}
+      <span v-show="required" class="text-blue-grey-lighten-1">{{ labelRequired }}</span>
     </label>
     <QuillEditor
       v-model:content="content"
@@ -151,7 +147,12 @@ export default defineComponent({
       @focus="handleFocus"
       @update:content="handleUpdateContent"
     />
-    <DangerAlert :id="labelFor" :message="message" :show="showAlert" class="mt-2"></DangerAlert>
+    <DangerAlert
+      :id="labelFor"
+      :message="messageValidate"
+      :show="showAlert"
+      class="mt-2"
+    ></DangerAlert>
   </div>
 </template>
 
