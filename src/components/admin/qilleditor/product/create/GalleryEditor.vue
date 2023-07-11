@@ -1,46 +1,37 @@
-<script lang="ts">
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import IconUpload from '@/components/icons/editor/IconUpload.vue'
 import IconDelete from '@/components/icons/editor/IconDelete.vue'
 import IconView from '@/components/icons/editor/IconView.vue'
 import { uploadImage } from '@/utils/file'
 
-export default {
-  components: { IconView, IconDelete, IconUpload },
-  props: {
-    src: {
-      type: String
-    }
-  },
-  data(): any {
-    return {
-      webpPaths: []
-    }
-  },
-  mounted() {
-    const savedWebpPaths = localStorage.getItem('productGalleryUnsaved')
-    if (savedWebpPaths) {
-      this.webpPaths = JSON.parse(savedWebpPaths)
-    }
-  },
-  methods: {
-    async uploadImage(event: { target: { files: any[] } }) {
-      const files = event.target.files
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i]
-        const formData = new FormData()
-        formData.append('image', file)
-        const webpPath = await uploadImage(formData)
-        this.webpPaths.push(webpPath)
-      }
-      localStorage.setItem('productGalleryUnsaved', JSON.stringify(this.webpPaths))
-    },
-    handleDelete(index) {
-      this.webpPaths.splice(index, 1)
-      localStorage.setItem('productGalleryUnsaved', JSON.stringify(this.webpPaths))
-    }
+const webpPaths = ref([])
+
+onMounted(() => {
+  const savedWebpPaths = localStorage.getItem('productGalleryUnsaved')
+  if (savedWebpPaths) {
+    webpPaths.value = JSON.parse(savedWebpPaths)
   }
+})
+
+const handleUploadImage = async (event: { target: { files: any } }) => {
+  const files = event.target.files
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i]
+    const formData = new FormData()
+    formData.append('image', file)
+    const webpPath = await uploadImage(formData)
+    webpPaths.value.push(webpPath)
+  }
+  localStorage.setItem('productGalleryUnsaved', JSON.stringify(webpPaths.value))
+}
+
+const handleDelete = (index: any) => {
+  webpPaths.value.splice(index, 1)
+  localStorage.setItem('productGalleryUnsaved', JSON.stringify(webpPaths.value))
 }
 </script>
+
 <template>
   <div class="mangosteen-gallery-editor">
     <label class="mangosteen-gallery-editor__label"> Gallery Image </label>
@@ -62,7 +53,7 @@ export default {
         class="mangosteen-gallery-editor__upload d-flex align-items-center justify-content-center"
       >
         <IconUpload class="mangosteen-gallery-editor__upload__icon"> </IconUpload>
-        <input class="w-100 h-100" type="file" multiple @change="uploadImage" />
+        <input class="w-100 h-100" type="file" multiple @change="handleUploadImage" />
       </div>
     </div>
   </div>

@@ -16,7 +16,7 @@ export default defineComponent({
 })
 </script>
 <template>
-  <header>
+  <header class="pt-3 px-3 px-md-4 pb-0">
     <div class="nav-bar">
       <div class="nav-bar-container d-flex align-items-center justify-content-between">
         <div class="nav-bar__left">
@@ -42,7 +42,6 @@ export default defineComponent({
 header {
   position: sticky;
   inset-block-start: 0;
-  padding: 16px 24px 0 24px;
   margin: auto;
   z-index: 9;
 

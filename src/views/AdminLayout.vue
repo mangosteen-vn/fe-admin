@@ -89,7 +89,7 @@ export default defineComponent({
     ></Aside>
     <div class="layout-content-wrapper">
       <Header :openAside="closeAside" @update:openAside="handleOpenAsideUpdate"></Header>
-      <v-main>
+      <v-main class="p-3 p-md-4">
         <router-view />
       </v-main>
     </div>
@@ -111,7 +111,6 @@ export default defineComponent({
 
   .layout-content-wrapper {
     .v-main {
-      padding: 24px 24px 24px 24px;
       margin: auto;
     }
   }

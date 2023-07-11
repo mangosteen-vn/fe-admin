@@ -1,4 +1,77 @@
 {
-  "Product Information": "Thông tin sản phẩm",
-  "welcome": "Chào mừng bạn đến với ứng dụng của chúng tôi"
+  "product": {
+    "label": "Sản phẩm",
+    "create": "Tạo mới",
+    "list": "Danh sách",
+    "category": "Danh mục",
+    "config": "Cấu hình",
+    "component": {
+      "product-information": {
+        "label": "Thông tin sản phẩm",
+        "component": {
+          "product-name": {
+            "label": "tên sản phẩm",
+            "placeholder": "eg. Nike Air Force 1",
+            "label-required": "(Bắt buộc)"
+          },
+          "product-description": {
+            "label": "mô tả sản phẩm",
+            "placeholder": "eg. Designed by Bruce Kilgore and introduced in 1982, the Air Force 1 was the first-ever basketball shoe to feature Nike Air technology ...",
+            "label-required": "(Bắt buộc)"
+          },
+          "product-content": {
+            "label": "nội dung sản phẩm",
+            "placeholder": "Colour Shown: White/White\nStyle: DH2920-111",
+            "label-required": "(Bắt buộc)"
+          }
+        }
+      },
+      "product-media": {
+        "label": "Tệp đa phương tiện",
+        "component": {
+          "label": "Ảnh đại diện của sản phẩm",
+          "gallery-image": "Gallery Image"
+        }
+      },
+      "product-price": {
+        "label": "Bảng giá",
+        "component": {
+          "original-price": {
+            "label": "Giá gốc",
+            "placeholder": "eg. 12000"
+          },
+          "current-price": {
+            "label": "Giá hiện tại",
+            "placeholder": "eg. 10000"
+          },
+          "priceNote": "Chú ý: Giá gốc của sản phẩm phải lớn hơn giá hiện tại đang được bán."
+        }
+      },
+      "product-organization": {
+        "label": "Nhà sản xuất",
+        "component": {
+          "product-vendor": {
+            "label": "Nhà cung cấp",
+            "placeholder": "eg. Nike"
+          },
+          "product-collection": {
+            "label": "Bộ sưu tập",
+            "placeholder": "eg. Hot Product"
+          }
+        }
+      },
+      "product-tag": {
+        "label": "Thẻ mô tả",
+        "component": {
+          "product-tag": {
+            "label": "Gắn thẻ cho sản phẩm",
+            "placeholder": "eg.Nike"
+          }
+        }
+      }
+    }
+  },
+  "validation": {
+    "required": "Trường {attribute} là bắt buộc."
+  }
 }

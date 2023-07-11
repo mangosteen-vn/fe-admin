@@ -43,15 +43,19 @@ watch(
       currentContent.value = newValue.slice(0, MAX_CONTENT_LENGTH)
     }
     emit('updateContent', newValue)
-    localStorage.setItem('productVendorUnsaved', newValue)
+    localStorage.setItem('productTitleUnsaved', newValue)
   }
 )
 </script>
 <template>
   <div class="mangosteen-title-editor">
-    <label :for="labelFor" class="mangosteen-title-editor__label form-label text-capitalize"
+    <label :for="labelFor" class="mangosteen-title-editor__label form-label"
       >{{ label }}
-      <span v-show="required" class="text-blue-grey-lighten-1">{{ labelRequired }}</span></label
+      <span
+        v-show="required"
+        class="mangosteen-title-editor__label__required text-blue-grey-lighten-1"
+        >{{ labelRequired }}</span
+      ></label
     >
     <input
       v-model="currentContent"
@@ -72,6 +76,12 @@ watch(
     font-size: 14px;
     color: var(--bs-black);
     font-weight: 500;
+    &:first-letter {
+      text-transform: uppercase;
+    }
+    &__required {
+      text-transform: none;
+    }
   }
   &__count {
     position: absolute;

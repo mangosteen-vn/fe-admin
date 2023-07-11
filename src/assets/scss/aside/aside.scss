@@ -10,7 +10,9 @@
   }
 
   &__menu {
-    padding: 0;
+    padding-left: 0;
+    height: 100%;
+    padding-bottom: 72px;
 
     .nav-item {
       list-style: none;
@@ -289,4 +291,7 @@ $xxl: 1400px;
       }
     }
   }
+}
+.ps__rail-y {
+  width: 4px !important;
 }

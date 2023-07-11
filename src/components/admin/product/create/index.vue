@@ -30,6 +30,7 @@ export default {
   methods: {
     handleChangeTitle(newVal) {
       this.data.title.value = newVal
+      console.log(newVal)
     },
     handleChangeSEOKeyword(newVal) {
       this.data.SEOKeyword.value = newVal
@@ -49,7 +50,7 @@ export default {
     scrollToElement(id) {
       const element = document.getElementById(id)
       if (element) {
-        const offset = element.offsetTop - 300
+        const offset = element.offsetTop - 50
         window.scrollTo({ top: offset, behavior: 'smooth' })
       }
     },
@@ -159,37 +160,41 @@ export default {
       },
       originalPrice: {
         id: 'productOriginalPrice',
-        label: 'Original Price',
+        label: t('product.component.product-price.component.original-price.label'),
         value: '',
         required: false,
-        placeholder: '120000',
+        placeholder: t('product.component.product-price.component.original-price.placeholder'),
         showAlert: false,
         messageValidate: 'None'
       },
       currentPrice: {
         id: 'productCurrentPrice',
-        label: 'Current Price',
+        label: t('product.component.product-price.component.current-price.label'),
         value: '',
         required: false,
-        placeholder: '100000',
+        placeholder: t('product.component.product-price.component.current-price.placeholder'),
         showAlert: false,
         messageValidate: 'None'
       },
       vendor: {
         id: 'productVendor',
-        label: 'Vendor',
+        label: t('product.component.product-organization.component.product-vendor.label'),
         value: '',
         required: false,
-        placeholder: 'eg. Nike',
+        placeholder: t(
+          'product.component.product-organization.component.product-vendor.placeholder'
+        ),
         showAlert: false,
         messageValidate: 'None'
       },
       collection: {
         id: 'productCollection',
-        label: 'Collections',
+        label: t('product.component.product-organization.component.product-collection.label'),
         value: '',
         required: false,
-        placeholder: 'eg. Nike',
+        placeholder: t(
+          'product.component.product-organization.component.product-collection.placeholder'
+        ),
         showAlert: false,
         messageValidate: 'None'
       },
@@ -217,7 +222,7 @@ export default {
       <div class="col-lg-8">
         <div class="product-information bg-white rounded-6 box-shadow-component">
           <div class="product-information__title p-4">
-            <p class="mb-0 fw-semibold">{{ $t('product.component.product-information.label') }}</p>
+            <p class="mb-0 fw-semibold">{{ t('product.component.product-information.label') }}</p>
           </div>
           <div class="product-information__body p-4">
             <TitleEditor
@@ -239,7 +244,7 @@ export default {
         </div>
         <div class="product-media mt-4 bg-white rounded-6 box-shadow-component">
           <div class="product-media__title p-4">
-            <p class="mb-0 fw-semibold">Media</p>
+            <p class="mb-0 fw-semibold">{{ t('product.component.product-media.label') }}</p>
           </div>
           <div class="product-media__body p-4">
             <ThumbnailEditor></ThumbnailEditor>
@@ -250,12 +255,12 @@ export default {
       <div class="col-lg-4 mt-4 mt-lg-0">
         <div class="product-price bg-white rounded-6 box-shadow-component">
           <div class="product-price__title p-4">
-            <p class="mb-0 fw-semibold">Pricing</p>
+            <p class="mb-0 fw-semibold">{{ t('product.component.product-price.label') }}</p>
           </div>
-          <div class="product-price__body p-4">
+          <div class="product-price__body p-4 pt-0">
             <OriginalPriceEditor
               v-bind="data.originalPrice"
-              class="mt-4 mt-lg-0"
+              class="mt-0"
               @updateContent="handleChangeTitle"
             ></OriginalPriceEditor>
             <CurrentPriceEditor
@@ -267,14 +272,13 @@ export default {
           </div>
           <div class="product-price__footer p-4">
             <p class="mb-0 fw-semibold">
-              Note: The original price must be greater than the current price is of the product for
-              sale.
+              {{ t('product.component.product-price.component.priceNote') }}
             </p>
           </div>
         </div>
         <div class="product-organization bg-white rounded-6 mt-4 box-shadow-component">
           <div class="product-organization__title p-4">
-            <p class="mb-0 fw-semibold">Organization</p>
+            <p class="mb-0 fw-semibold">{{ t('product.component.product-organization.label') }}</p>
           </div>
           <div class="product-organization__body p-4">
             <VendorEditor v-bind="data.vendor"></VendorEditor>
@@ -284,9 +288,14 @@ export default {
               @updateContent="handleChangeCollection"
             >
             </CollectionEditor>
-            <!--            <TagEditor v-bind="data.tag" class="mt-21">-->
-
-            <!--            </TagEditor>-->
+          </div>
+        </div>
+        <div class="product-tag bg-white rounded-6 mt-4 box-shadow-component">
+          <div class="product-tag__title p-4">
+            <p class="mb-0 fw-semibold">{{ t('product.component.product-tag.label') }}</p>
+          </div>
+          <div class="product-tag__body pb-4 px-4">
+            <TagEditor v-bind="data.tag"> </TagEditor>
           </div>
         </div>
       </div>
@@ -300,7 +309,8 @@ export default {
   .product-media,
   .product-price,
   .product-information,
-  .product-organization {
+  .product-organization,
+  .product-tag {
     &__title {
       color: rgba(var(--nav-link-inerhit));
       font-size: 18px;

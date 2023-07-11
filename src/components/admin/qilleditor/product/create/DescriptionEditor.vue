@@ -57,15 +57,15 @@ const handleBlur = () => {
   focused.value = false
 }
 
-function handleUpdateContent(newContent: string) {
-  emit('updateContent', newContent)
-  localStorage.setItem('productDescriptionUnsaved', newContent)
+function handleUpdateContent(newValue: string) {
+  emit('updateContent', newValue)
+  localStorage.setItem('productDescriptionUnsaved', newValue)
 }
 
 onMounted(() => {
-  const contentUnsaved: string | null = localStorage.getItem('productDescriptionUnsaved')
-  if (contentUnsaved) {
-    content.value = contentUnsaved
+  const productDescriptionUnsaved: string | null = localStorage.getItem('productDescriptionUnsaved')
+  if (productDescriptionUnsaved) {
+    content.value = productDescriptionUnsaved
   }
 })
 </script>

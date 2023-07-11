@@ -8,6 +8,7 @@ import '@/plugins/toast'
 import firebase from '@/plugins/firebase'
 import { AOS } from '@/plugins/aos'
 import i18n from '@/plugins/i18n'
+import 'perfect-scrollbar/css/perfect-scrollbar.css'
 
 /**
  * plugins/edit.ts

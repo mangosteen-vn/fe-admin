@@ -11,7 +11,7 @@
         color: rgb(115, 13, 240);
       }
     }
-    .v-field {
+    .v-field--variant-outlined {
       .v-field__outline {
         color: var(--blue-grey-lighten-3);
         --v-field-border-opacity: 1;
@@ -24,19 +24,38 @@
           border-radius: 0px 6px 6px 0px;
         }
       }
+      &.v-field--focused {
+        .v-field__outline {
+          --v-field-border-width: 1px;
+          box-shadow: 0 0 0.25rem 0.05rem rgba(105, 108, 255, 0.1) !important;
+          color: var(--vuexy-purple);
+        }
+      }
+      &:hover:not(.v-field--focused) {
+        .v-field__outline {
+          color: rgba(var(--nav-link-inerhit), 0.48);
+        }
+      }
+    }
+    .v-field__input {
+      input {
+        &::placeholder {
+          border-color: rgba(var(--nav-link-inerhit), 0.25);
+          font-weight: 500;
+          font-style: italic;
+          transition: 0.4s;
+          color: rgba(var(--nav-link-inerhit), 0.48);
+          opacity: 1;
+        }
+      }
     }
   }
-
   .v-select__selection {
     align-items: center;
     .v-select__selection-text {
       font-weight: 500;
       color: rgba(var(--nav-link-inerhit), 0.78);
     }
-  }
-
-  .v-field--variant-outlined.v-field--focused .v-field__outline {
-    --v-field-border-width: 1px;
   }
 }
 

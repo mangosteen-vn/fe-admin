@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineComponent, onMounted, ref, defineProps, reactive, defineEmits } from 'vue'
+import { onMounted, ref, defineProps, reactive, defineEmits } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import BlotFormatter from 'quill-blot-formatter'
@@ -58,9 +58,9 @@ onMounted(() => {
   }
 })
 
-const handleUpdateContent = (newContent: string) => {
-  emit('updateContent', newContent)
-  localStorage.setItem('productContentUnsaved', newContent)
+const handleUpdateContent = (newValue: string) => {
+  emit('updateContent', newValue)
+  localStorage.setItem('productContentUnsaved', newValue)
 }
 
 const modules = reactive(
@@ -114,7 +114,6 @@ const modules = reactive(
         return new Promise<string>((resolve, reject) => {
           const formData = new FormData()
           formData.append('image', file)
-          console.log(formData)
           uploadImage(formData)
             .then((webpPath: string) => {
               resolve(webpPath)

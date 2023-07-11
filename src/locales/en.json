@@ -22,35 +22,57 @@
           "product-content": {
             "label": "product content",
             "placeholder": "Colour Shown: White/White\nStyle: DH2920-111",
-            "label-required": "(Optionasl)"
+            "label-required": "(Optional)"
           }
         }
       },
       "product-media": {
         "label": "Media",
         "component": {
-          "thumbnail": "Thumbnail",
+          "thumbnail": {
+            "label": "Thumbnail"
+          },
           "gallery-image": "Gallery Image"
         }
       },
       "product-price": {
         "label": "Pricing",
         "component": {
-          "original-price": "Original Price",
-          "current-price": "Current Price"
+          "original-price": {
+            "label": "Original Price",
+            "placeholder": "eg. 12000"
+          },
+          "current-price": {
+            "label": "Current Price",
+            "placeholder": "eg. 10000"
+          },
+          "priceNote": "Note: The original price must be greater than the current price is of the product for sale."
         }
       },
       "product-organization": {
         "label": "Organization",
         "component": {
-          "product-vendor": "Vendor",
-          "product-collection": "Collection"
+          "product-vendor": {
+            "label": "Vendor",
+            "placeholder": "eg. Nike"
+          },
+          "product-collection": {
+            "label": "Collection"
+          }
+        }
+      },
+      "product-tag": {
+        "label": "Tags",
+        "component": {
+          "product-tag": {
+            "label": "Tags",
+            "placeholder": "eg.Nike"
+          }
         }
       }
     }
   },
   "validation": {
     "required": "The {attribute} field is required."
-  },
-  "welcome": "Welcome to our app"
+  }
 }
