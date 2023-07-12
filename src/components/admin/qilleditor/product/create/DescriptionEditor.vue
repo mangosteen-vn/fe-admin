@@ -4,7 +4,7 @@ import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import BlotFormatter from 'quill-blot-formatter'
 import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
 
-import { defineProps, onMounted, reactive, ref, defineEmits } from 'vue'
+import { defineProps, onMounted, reactive, ref, defineEmits, watch } from 'vue'
 
 const props: any = defineProps({
   labelFor: String,
@@ -47,7 +47,7 @@ const modules = reactive({
 })
 
 const focused = ref(false)
-const content = ref(null)
+const content = ref('')
 
 const handleFocus = () => {
   focused.value = true
@@ -57,10 +57,10 @@ const handleBlur = () => {
   focused.value = false
 }
 
-function handleUpdateContent(newValue: string) {
+watch(content, (newValue: string) => {
   emit('updateContent', newValue)
   localStorage.setItem('productDescriptionUnsaved', newValue)
-}
+})
 
 onMounted(() => {
   const productDescriptionUnsaved: string | null = localStorage.getItem('productDescriptionUnsaved')
@@ -85,7 +85,6 @@ onMounted(() => {
       theme="snow"
       @blur="handleBlur"
       @focus="handleFocus"
-      @update:content="handleUpdateContent"
     />
     <DangerAlert
       :id="labelFor"

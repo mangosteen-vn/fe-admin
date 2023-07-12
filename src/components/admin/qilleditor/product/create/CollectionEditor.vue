@@ -1,5 +1,13 @@
 <script lang="ts" setup>
-import { onMounted, ref, onServerPrefetch, defineProps, defineEmits } from 'vue'
+import {
+  onMounted,
+  ref,
+  onServerPrefetch,
+  defineProps,
+  defineEmits,
+  onBeforeMount,
+  watch
+} from 'vue'
 import IconSelect from '@/components/icons/product/create/IconSelect.vue'
 import IconClear from '@/components/icons/product/create/IconClear.vue'
 import { getCollections } from '@/utils/collection/collection'
@@ -8,7 +16,7 @@ const collection = ref(null)
 const collections = ref([])
 
 const props = defineProps({
-  labelFor: String,
+  id: String,
   label: {
     type: String,
     default: ''
@@ -36,37 +44,34 @@ const fetchCollections = async () => {
   }
 }
 
-onServerPrefetch(fetchCollections())
+onBeforeMount(async () => {
+  await fetchCollections()
+})
 
 onMounted(async () => {
-  const collectionUnsaved: string | null = localStorage.getItem('collectionUnsaved')
-  if (collectionUnsaved) {
-    collection.value = JSON.parse(collectionUnsaved)
-  }
-  if (!collections.value) {
-    await fetchCollections()
+  const productCollectionUnsaved: string | null = localStorage.getItem('productCollectionUnsaved')
+  if (productCollectionUnsaved) {
+    collection.value = JSON.parse(productCollectionUnsaved)
   }
 })
 
-const handleUpdateCollection = (content: any) => {
-  collection.value = content
-  emit('updateContent', content)
-  localStorage.setItem('collectionUnsaved', JSON.stringify(collection.value))
+const handleUpdateContent = (newVal: any) => {
+  collection.value = newVal
+  localStorage.setItem('productCollectionUnsaved', JSON.stringify(collection.value))
 }
 
 const handleClearCollection = () => {
-  handleUpdateCollection(null)
+  collection.value = null
+  localStorage.removeItem('productCollectionUnsaved')
 }
 
-const handleChangeCollection = () => {
-  handleUpdateCollection(collection.value)
-}
+watch(collection, (newVal: any) => {
+  emit('updateContent', newVal)
+})
 </script>
 <template>
   <div class="mangosteen-collection-editor">
-    <label :for="labelFor" class="mangosteen-collection-editor__label form-label">
-      {{ label }}</label
-    >
+    <label :for="id" class="mangosteen-collection-editor__label form-label"> {{ label }}</label>
     <div class="mangosteen-collection-editor__select v-select--custom-v1 h-40">
       <v-select
         :menu-icon="null"
@@ -82,7 +87,7 @@ const handleChangeCollection = () => {
         :placeholder="placeholder"
         v-model="collection"
         :items="collections"
-        @update:modelValue="handleChangeCollection"
+        @update:modelValue="handleUpdateContent"
       >
         <template #append-inner>
           <IconSelect></IconSelect>

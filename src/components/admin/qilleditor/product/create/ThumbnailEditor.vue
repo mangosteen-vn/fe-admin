@@ -1,41 +1,42 @@
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script lang="ts" setup>
+import { defineProps, onMounted, ref } from 'vue'
 import IconUpload from '@/components/icons/editor/IconUpload.vue'
 import IconDelete from '@/components/icons/editor/IconDelete.vue'
 import IconView from '@/components/icons/editor/IconView.vue'
 import { uploadImage } from '@/utils/file'
 
-export default defineComponent({
-  components: { IconView, IconDelete, IconUpload },
-  props: {
-    src: {
-      type: String
-    }
-  },
-  data() {
-    return {
-      webpPath: localStorage.getItem('productThumbnailUnsaved') || this.src
-    }
-  },
-  methods: {
-    async uploadImage(event: { target: { files: any[] } }) {
-      const file = event.target.files[0]
-      const formData = new FormData()
-      formData.append('image', file)
-      this.webpPath = await uploadImage(formData)
-      localStorage.setItem('productThumbnailUnsaved', this.webpPath)
-    },
-    handleDelete() {
-      this.webpPath = null
-      localStorage.removeItem('productThumbnailUnsaved')
-    }
+const props = defineProps({
+  label: {
+    type: String,
+    default: ''
+  }
+})
+
+const webpPath = ref('')
+const handleUploadImage = async (event: { target: { files: any[] } }) => {
+  const file = event.target.files[0]
+  const formData = new FormData()
+  formData.append('image', file)
+  webpPath.value = await uploadImage(formData)
+  localStorage.setItem('productThumbnailUnsaved', webpPath.value)
+}
+
+const handleDelete = () => {
+  webpPath.value = null
+  localStorage.removeItem('productThumbnailUnsaved')
+}
+
+onMounted(() => {
+  const productThumbnailUnsaved: string | null = localStorage.getItem('productThumbnailUnsaved')
+  if (productThumbnailUnsaved) {
+    webpPath.value = productThumbnailUnsaved
   }
 })
 </script>
 
 <template>
   <div class="mangosteen-thumbnail-editor">
-    <label class="mangosteen-thumbnail-editor__label"> Thumbnail </label>
+    <label class="mangosteen-thumbnail-editor__label"> {{ label }} </label>
     <div class="d-flex">
       <div v-if="webpPath" class="mangosteen-thumbnail-editor__img me-3 ratio ratio-1x1 p-1">
         <img :src="webpPath" class="base64-img img-thumbnail object-fit-cover" />
@@ -50,7 +51,7 @@ export default defineComponent({
         class="mangosteen-thumbnail-editor__upload d-flex align-items-center justify-content-center"
       >
         <IconUpload class="mangosteen-thumbnail-editor__upload__icon"> </IconUpload>
-        <input class="w-100 h-100" ref="fileInput" type="file" @change="uploadImage" />
+        <input class="w-100 h-100" ref="fileInput" type="file" @change="handleUploadImage" />
       </div>
     </div>
   </div>

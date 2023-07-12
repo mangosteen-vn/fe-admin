@@ -18,7 +18,7 @@ export default {
     }
   },
   mounted() {
-    this.currentContent = localStorage.getItem('productTitleUnsaved') || ''
+    this.currentContent = localStorage.getItem('productOriginalPrice') || ''
   },
   methods: {
     validateNumber() {
@@ -31,7 +31,7 @@ export default {
         this.currentContent = newVal.slice(0, 255)
       }
       this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productTitleUnsaved', this.currentContent)
+      localStorage.setItem('productOriginalPrice', this.currentContent)
     }
   }
 }

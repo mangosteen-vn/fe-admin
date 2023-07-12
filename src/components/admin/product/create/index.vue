@@ -12,10 +12,12 @@ import VendorEditor from '@/components/admin/qilleditor/product/create/VendorEdi
 import CollectionEditor from '@/components/admin/qilleditor/product/create/CollectionEditor.vue'
 import TagEditor from '@/components/admin/qilleditor/product/create/TagEditor.vue'
 import { useI18n } from 'vue-i18n'
+import CategoryEditor from '@/components/admin/qilleditor/product/create/CategoryEditor.vue'
 
 export default {
   name: 'DashboardView',
   components: {
+    CategoryEditor,
     TagEditor,
     CollectionEditor,
     VendorEditor,
@@ -30,7 +32,6 @@ export default {
   methods: {
     handleChangeTitle(newVal) {
       this.data.title.value = newVal
-      console.log(newVal)
     },
     handleChangeSEOKeyword(newVal) {
       this.data.SEOKeyword.value = newVal
@@ -41,11 +42,17 @@ export default {
     handleChangeContent(newVal) {
       this.data.content.value = newVal
     },
-    handleChangeCollection(newCollectionId) {
-      this.data.collection.value = newCollectionId
+    handleChangeCollection(newVal) {
+      this.data.collection.value = newVal
     },
     handleChangeCurrentPrice(newVal) {
       this.data.currentPrice.value = newVal
+    },
+    handleChangeTag(newVal) {
+      this.data.tag.value = newVal
+    },
+    handleChangeCategory(newVal) {
+      this.data.category.value = Object.values(newVal).map((item) => item.id)
     },
     scrollToElement(id) {
       const element = document.getElementById(id)
@@ -58,6 +65,10 @@ export default {
       const regex = /(<([^>]+)>)/gi
       const text = value.replace(regex, '').trim()
       return !!text.length
+    },
+    filterTitleProps(titleProps) {
+      const { value, ...filteredProps } = titleProps
+      return filteredProps
     },
     createProduct() {
       let isValid = true
@@ -81,11 +92,16 @@ export default {
 
       if (isValid) {
         localStorage.removeItem('productDescriptionUnsaved')
-        localStorage.removeItem('productSEOKeywordUnsaved')
         localStorage.removeItem('productTitleUnsaved')
         localStorage.removeItem('productContentUnsaved')
         localStorage.removeItem('productThumbnailUnsaved')
         localStorage.removeItem('productGalleryUnsaved')
+        localStorage.removeItem('productVendorUnsaved')
+        localStorage.removeItem('productCategoryUnsaved')
+        localStorage.removeItem('productCollectionUnsaved')
+        localStorage.removeItem('productTagUnsaved')
+        localStorage.removeItem('productCurrentPriceUnsaved')
+        localStorage.removeItem('productOriginalPrice')
         router.push('/admin/product/list')
       }
     }
@@ -158,6 +174,12 @@ export default {
         }),
         type: 'quillEditor'
       },
+      thumbnail: {
+        label: t('product.component.product-media.component.thumbnail.label')
+      },
+      gallery: {
+        label: t('product.component.product-media.component.gallery-image.label')
+      },
       originalPrice: {
         id: 'productOriginalPrice',
         label: t('product.component.product-price.component.original-price.label'),
@@ -200,10 +222,19 @@ export default {
       },
       tag: {
         id: 'productTag',
-        label: 'Tag',
+        label: t('product.component.product-tag.component.product-tag.label'),
         value: '',
         required: false,
-        placeholder: 'Tags Product',
+        placeholder: t('product.component.product-tag.component.product-tag.placeholder'),
+        showAlert: false,
+        messageValidate: 'None'
+      },
+      category: {
+        id: 'productCategory',
+        label: t('product.component.product-category.component.product-category.label'),
+        value: '',
+        required: false,
+        placeholder: t('product.component.product-category.component.product-category.placeholder'),
         showAlert: false,
         messageValidate: 'None'
       }
@@ -226,29 +257,29 @@ export default {
           </div>
           <div class="product-information__body p-4">
             <TitleEditor
-              v-bind="data.title"
-              class="mt-4 mt-lg-0"
+              v-bind="filterTitleProps(data.title)"
+              class="mt-3 mt-lg-0"
               @updateContent="handleChangeTitle"
             ></TitleEditor>
             <DescriptionEditor
               v-bind="data.description"
-              class="mt-4"
+              class="mt-3 mt-lg-4"
               @updateContent="handleUpdateDescription"
             ></DescriptionEditor>
             <ContentEditor
               v-bind="data.content"
-              class="mt-4"
+              class="mt-3 mt-lg-4"
               @updateContent="handleChangeContent"
             ></ContentEditor>
           </div>
         </div>
-        <div class="product-media mt-4 bg-white rounded-6 box-shadow-component">
+        <div class="product-media mt-3 mt-lg-4 bg-white rounded-6 box-shadow-component">
           <div class="product-media__title p-4">
             <p class="mb-0 fw-semibold">{{ t('product.component.product-media.label') }}</p>
           </div>
           <div class="product-media__body p-4">
-            <ThumbnailEditor></ThumbnailEditor>
-            <GalleryEditor class="mt-4"></GalleryEditor>
+            <ThumbnailEditor v-bind="data.thumbnail"></ThumbnailEditor>
+            <GalleryEditor v-bind="data.gallery" class="mt-3 mt-lg-4"></GalleryEditor>
           </div>
         </div>
       </div>
@@ -276,7 +307,7 @@ export default {
             </p>
           </div>
         </div>
-        <div class="product-organization bg-white rounded-6 mt-4 box-shadow-component">
+        <div class="product-organization bg-white rounded-6 mt-3 mt-lg-4 box-shadow-component">
           <div class="product-organization__title p-4">
             <p class="mb-0 fw-semibold">{{ t('product.component.product-organization.label') }}</p>
           </div>
@@ -290,12 +321,23 @@ export default {
             </CollectionEditor>
           </div>
         </div>
-        <div class="product-tag bg-white rounded-6 mt-4 box-shadow-component">
+        <div class="product-tag bg-white rounded-6 mt-3 mt-lg-4 box-shadow-component">
           <div class="product-tag__title p-4">
             <p class="mb-0 fw-semibold">{{ t('product.component.product-tag.label') }}</p>
           </div>
           <div class="product-tag__body pb-4 px-4">
-            <TagEditor v-bind="data.tag"> </TagEditor>
+            <TagEditor @updateContent="handleChangeTag" v-bind="data.tag"> </TagEditor>
+          </div>
+        </div>
+        <div class="product-tag bg-white rounded-6 mt-3 mt-lg-4 box-shadow-component">
+          <div class="product-tag__title p-4">
+            <p class="mb-0 fw-semibold">{{ t('product.component.product-category.label') }}</p>
+          </div>
+          <div class="product-tag__body pb-4 px-4">
+            <CategoryEditor
+              v-bind="data.category"
+              @updateContent="handleChangeCategory"
+            ></CategoryEditor>
           </div>
         </div>
       </div>

@@ -5,6 +5,13 @@ import IconDelete from '@/components/icons/editor/IconDelete.vue'
 import IconView from '@/components/icons/editor/IconView.vue'
 import { uploadImage } from '@/utils/file'
 
+const props = defineProps({
+  label: {
+    type: String,
+    default: ''
+  }
+})
+
 const webpPaths = ref([])
 
 onMounted(() => {
@@ -34,7 +41,7 @@ const handleDelete = (index: any) => {
 
 <template>
   <div class="mangosteen-gallery-editor">
-    <label class="mangosteen-gallery-editor__label"> Gallery Image </label>
+    <label class="mangosteen-gallery-editor__label"> {{ label }} </label>
     <div class="d-flex flex-wrap gap-3">
       <div
         v-for="(image, index) in webpPaths"

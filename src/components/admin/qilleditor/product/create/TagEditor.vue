@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, onMounted, onServerPrefetch, reactive, ref } from 'vue'
+import { defineProps, onMounted, defineEmits, ref, onBeforeMount, watch } from 'vue'
 import IconSelect from '@/components/icons/product/create/IconSelect.vue'
 import IconClear from '@/components/icons/product/create/IconClear.vue'
 import { getTags } from '@/utils/tag'
@@ -7,10 +7,14 @@ import { getTags } from '@/utils/tag'
 const tags = ref([])
 const tagsSelected = ref([])
 
+const emit = defineEmits(['updateContent'])
 const props = defineProps({
   labelFor: String,
   label: String,
-  placeholder: String,
+  placeholder: {
+    type: String,
+    default: ''
+  },
   required: Boolean,
   message: String,
   showAlert: Boolean
@@ -19,28 +23,39 @@ const props = defineProps({
 const fetchTags = async () => {
   try {
     const { data } = await getTags(-1, 'product')
-    tags.value = data
+    const names = data.map((obj: { name: any }) => obj.name)
+    tags.value = names
   } catch (error) {
     console.error(error)
   }
 }
 
-onServerPrefetch(fetchTags())
+const handleUpdateContent = (newValue) => {
+  emit('updateContent', newValue)
+  localStorage.setItem('productTagUnsaved', JSON.stringify(newValue))
+}
+
+onBeforeMount(async () => {
+  await fetchTags()
+})
 
 onMounted(async () => {
-  const tagUnsaved: string | null = localStorage.getItem('tagUnsaved')
-  if (tagUnsaved) {
-    tags.value = JSON.parse(tagUnsaved)
-  }
-  if (!tags.value) {
-    await fetchTags()
+  const productTagUnsaved: string | null = localStorage.getItem('productTagUnsaved')
+  if (productTagUnsaved) {
+    tagsSelected.value = JSON.parse(productTagUnsaved)
   }
 })
 
 const handleClearTags = () => {
   tagsSelected.value = null
+  localStorage.removeItem('productTagUnsaved')
 }
+
+watch(tagsSelected, (newValue: any) => {
+  emit('updateContent', newValue)
+})
 </script>
+
 <template>
   <div class="mangosteen-tag-editor">
     <label :for="labelFor" class="mangosteen-tag-editor__label form-label"> {{ label }}</label>
@@ -53,13 +68,15 @@ const handleClearTags = () => {
         class="mangosteen__combobox"
         clear
         clearable
+        item-title="name"
         hide-details
         hide-no-data
         hide-selected
-        item-title="name"
         multiple
         return-object
+        :placeholder="placeholder"
         variant="outlined"
+        @update:modelValue="handleUpdateContent"
       >
         <template #clear>
           <IconClear @click="handleClearTags"></IconClear>

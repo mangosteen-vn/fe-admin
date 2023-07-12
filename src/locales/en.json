@@ -32,7 +32,9 @@
           "thumbnail": {
             "label": "Thumbnail"
           },
-          "gallery-image": "Gallery Image"
+          "gallery-image": {
+            "label": "Gallery Image"
+          }
         }
       },
       "product-price": {
@@ -66,7 +68,25 @@
         "component": {
           "product-tag": {
             "label": "Tags",
-            "placeholder": "eg.Nike"
+            "placeholder": "eg. Air Force 1, Men's Shoes"
+          }
+        }
+      },
+      "product-category": {
+        "label": "Category",
+        "component": {
+          "product-category": {
+            "label": "Category",
+            "placeholder": "eg. Shoes"
+          }
+        }
+      },
+      "product-eo": {
+        "label": "Category",
+        "component": {
+          "product-seo-title": {
+            "label": "SEO Title",
+            "placeholder": "eg. Shoes"
           }
         }
       }

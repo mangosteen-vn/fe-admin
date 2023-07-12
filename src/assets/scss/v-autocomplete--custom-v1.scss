@@ -1,0 +1,105 @@
+.v-autocomplete--custom-v1 {
+  &.h-40 {
+    .v-field__input {
+      padding: 6px 16px;
+      box-sizing: border-box;
+      min-height: 40px;
+      height: fit-content;
+      gap: 2px;
+    }
+  }
+  .mangosteen__autocomplete {
+    &.v-input--dirty {
+      .v-field__input {
+        padding: 6px 6px;
+      }
+    }
+    .v-field--variant-outlined {
+      .v-field__outline {
+        color: var(--blue-grey-lighten-3);
+        --v-field-border-opacity: 1;
+        --v-field-border-with: 1px !important;
+        .v-field__outline__start {
+          border-radius: 6px 0px 0px 6px;
+        }
+
+        .v-field__outline__end {
+          border-radius: 0px 6px 6px 0px;
+        }
+      }
+      &.v-field--focused {
+        .v-field__outline {
+          --v-field-border-width: 1px;
+          box-shadow: 0 0 0.25rem 0.05rem rgba(105, 108, 255, 0.1) !important;
+          color: var(--vuexy-purple);
+        }
+      }
+      &:hover:not(.v-field--focused) {
+        .v-field__outline {
+          color: rgba(var(--nav-link-inerhit), 0.48);
+        }
+      }
+    }
+    .v-autocomplete__selection {
+      .v-chip--variant-tonal {
+        color: var(--vuexy-purple);
+        font-weight: 600;
+        border-radius: 6px;
+      }
+    }
+    .v-field__input {
+      input {
+        color: rgba(var(--nav-link-inerhit), 0.78) !important;
+        caret: rgba(var(--nav-link-inerhit), 0.78);
+        font-weight: 500;
+        &::placeholder {
+          border-color: rgba(var(--nav-link-inerhit), 0.25);
+          font-weight: 500;
+          font-style: italic;
+          transition: 0.4s;
+          color: rgba(var(--nav-link-inerhit), 0.48);
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
+.v-autocomplete__content {
+  border-radius: 6px;
+  box-shadow: 0 4px 18px rgba(47, 43, 61, 0.1), 0 0 transparent, 0 0 transparent !important;
+
+  .v-list-item {
+    border-radius: 0.375rem;
+    margin-block: 0.25rem;
+    margin-inline: 0.5rem;
+    min-block-size: 2.375rem;
+    color: var(--vuexy-purple);
+    &:after {
+      border: 0;
+    }
+    &:hover,
+    &:focus-visible {
+      background-color: rgba(var(--vuexy-purple), 1);
+      .v-list-item-title {
+        color: var(--vuexy-purple);
+      }
+      .v-list-item__overlay {
+        opacity: 0.08;
+      }
+    }
+    &.v-list-item--active {
+      background-color: var(--vuexy-purple);
+      .v-list-item-title {
+        color: var(--bs-white);
+      }
+      .v-list-item__overlay {
+        opacity: 0;
+      }
+    }
+
+    &-title {
+      font-weight: 500;
+      color: rgba(var(--nav-link-inerhit), 0.78);
+    }
+  }
+}

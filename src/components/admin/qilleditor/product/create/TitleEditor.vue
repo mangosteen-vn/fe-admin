@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
-import { computed, onMounted, ref, watch, defineEmits, defineProps } from 'vue'
+import { computed, onMounted, ref, watch, defineEmits, defineProps, defineOptions } from 'vue'
+
+defineOptions({
+  inheritAttrs: false
+})
 
 const MAX_CONTENT_LENGTH = 255
 
-const currentContent = ref('')
+const currentContent = ref<string>('')
 
 const emit = defineEmits(['updateContent'])
 
 const props: any = defineProps({
-  labelFor: String,
+  id: String,
   label: {
     type: String,
     default: ''
@@ -49,7 +53,7 @@ watch(
 </script>
 <template>
   <div class="mangosteen-title-editor">
-    <label :for="labelFor" class="mangosteen-title-editor__label form-label"
+    <label :for="id" class="mangosteen-title-editor__label form-label"
       >{{ label }}
       <span
         v-show="required"
@@ -61,7 +65,7 @@ watch(
       v-model="currentContent"
       type="text"
       class="mangosteen-title-editor__input form-control"
-      :id="labelFor"
+      :id="id"
       :placeholder="placeholder"
     />
     <div class="mangosteen-title-editor__count">{{ characterCount }}/255</div>

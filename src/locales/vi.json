@@ -29,8 +29,12 @@
       "product-media": {
         "label": "Tệp đa phương tiện",
         "component": {
-          "label": "Ảnh đại diện của sản phẩm",
-          "gallery-image": "Gallery Image"
+          "thumbnail": {
+            "label": "Ảnh đại diện sản phẩm"
+          },
+          "gallery-image": {
+            "label": "Bộ sưu tập ảnh sản phẩm"
+          }
         }
       },
       "product-price": {
@@ -65,7 +69,16 @@
         "component": {
           "product-tag": {
             "label": "Gắn thẻ cho sản phẩm",
-            "placeholder": "eg.Nike"
+            "placeholder": "eg. Air Force 1, Men's Shoes"
+          }
+        }
+      },
+      "product-category": {
+        "label": "Danh mục",
+        "component": {
+          "product-category": {
+            "label": "Danh mục sản phẩm",
+            "placeholder": "eg. Shoes"
           }
         }
       }

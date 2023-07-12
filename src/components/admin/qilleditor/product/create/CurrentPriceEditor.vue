@@ -1,39 +1,35 @@
-<script>
+<script setup lang="ts">
+import { ref, watch, defineEmits, defineProps } from 'vue'
 import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
 
-export default {
-  components: { DangerAlert },
-  props: {
-    labelFor: String,
-    label: String,
-    placeholder: String,
-    required: Boolean,
-    message: String,
-    showAlert: Boolean
-  },
+const emit = defineEmits(['updateContent'])
 
-  data() {
-    return {
-      currentContent: ''
-    }
+const props = defineProps({
+  labelFor: String,
+  label: String,
+  placeholder: String,
+  required: Boolean,
+  message: {
+    type: String,
+    default: ''
   },
-  mounted() {
-    this.currentContent = localStorage.getItem('productCurrentPriceUnsaved') || ''
-  },
-  methods: {
-    validateNumber() {
-      this.currentContent = this.currentContent.replace(/\D/g, '')
-    }
-  },
-  watch: {
-    currentContent(newVal) {
-      if (newVal.length > 255) {
-        this.currentContent = newVal.slice(0, 255)
-      }
-      this.$emit('updateContent', this.currentContent)
-      localStorage.setItem('productCurrentPriceUnsaved', this.currentContent)
-    }
+  showAlert: Boolean
+})
+
+const currentContent = ref('')
+
+currentContent.value = localStorage.getItem('productCurrentPriceUnsaved') || ''
+
+watch(currentContent, (newVal) => {
+  if (newVal.length > 255) {
+    currentContent.value = newVal.slice(0, 255)
   }
+  emit('updateContent', currentContent.value)
+  localStorage.setItem('productCurrentPriceUnsaved', currentContent.value)
+})
+
+const validateNumber = () => {
+  currentContent.value = currentContent.value.replace(/\D/g, '')
 }
 </script>
 <template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, defineProps, reactive, defineEmits } from 'vue'
+import { onMounted, ref, defineProps, reactive, defineEmits, watch } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import BlotFormatter from 'quill-blot-formatter'
@@ -13,7 +13,7 @@ import { uploadImage } from '@/utils/file'
 import DangerAlert from '@/components/admin/alert/DangerAlert.vue'
 
 const props = defineProps({
-  labelFor: String,
+  id: String,
   label: {
     type: String,
     default: ''
@@ -33,7 +33,7 @@ const props = defineProps({
 
 const emit = defineEmits(['updateContent'])
 
-const content = ref<string | null>(null)
+const content = ref<string | null>('')
 const focused = ref(false)
 
 const options = reactive({
@@ -58,10 +58,10 @@ onMounted(() => {
   }
 })
 
-const handleUpdateContent = (newValue: string) => {
+watch(content, (newValue: string) => {
   emit('updateContent', newValue)
   localStorage.setItem('productContentUnsaved', newValue)
-}
+})
 
 const modules = reactive(
   {
@@ -131,7 +131,7 @@ const modules = reactive(
 
 <template>
   <div :class="{ focused: focused }" class="mangosteen-content-editor">
-    <label :for="labelFor" class="mangosteen-content-editor__label form-label text-capitalize">
+    <label :for="id" class="mangosteen-content-editor__label form-label text-capitalize">
       {{ label }}
       <span v-show="required" class="text-blue-grey-lighten-1">{{ labelRequired }}</span>
     </label>
@@ -144,14 +144,8 @@ const modules = reactive(
       toolbar="full"
       @blur="handleBlur"
       @focus="handleFocus"
-      @update:content="handleUpdateContent"
     />
-    <DangerAlert
-      :id="labelFor"
-      :message="messageValidate"
-      :show="showAlert"
-      class="mt-2"
-    ></DangerAlert>
+    <DangerAlert :id="id" :message="messageValidate" :show="showAlert" class="mt-2"></DangerAlert>
   </div>
 </template>
 
